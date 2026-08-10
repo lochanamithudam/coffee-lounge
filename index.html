@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description"
+        content="Coffee Lounge — Fine Coffee & Lounge. Experience premium specialty coffee, artisan teas, and gourmet bites in an elegant setting. Reserve your table today." />
+    <meta name="keywords"
+        content="coffee lounge, specialty coffee, artisan cafe, fine dining, coffee shop, latte art, bakery" />
+    <meta property="og:title" content="Coffee Lounge — Fine Coffee & Lounge" />
+    <meta property="og:description"
+        content="Where every sip tells a story. Premium coffee, artisan cuisine, and unforgettable lounge experiences." />
+    <title>Coffee Lounge — Fine Coffee &amp; Lounge</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <!-- Font Awesome (icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        crossorigin="anonymous" />
+</head>
+
+<body>
+
+    <!-- ================================================
+     LIGHTBOX
+     ================================================ -->
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
+        <span class="lightbox-close" id="lightboxClose">✕ &nbsp;Close</span>
+        <img src="" alt="Gallery Image" />
+    </div>
+
+    <!-- ================================================
+     MOBILE OVERLAY
+     ================================================ -->
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+
+    <!-- ================================================
+     MOBILE NAV PANEL
+     ================================================ -->
+    <nav class="mobile-nav" id="mobileNav" aria-label="Mobile Navigation">
+        <span class="mobile-nav-close" id="mobileNavClose">✕ &nbsp;Close</span>
+        <ul class="mobile-nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#menu">Menu</a></li>
+            <li><a href="#gallery">Gallery</a></li>
+            <li><a href="#events">Events</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div class="mobile-nav-actions">
+            <a href="#contact" class="btn-primary" style="justify-content:center;">Reserve a Table</a>
+            <a href="#menu" class="btn-secondary" style="justify-content:center;">Order Online</a>
+        </div>
+    </nav>
+
+    <!-- ================================================
+     HEADER / NAV
+     ================================================ -->
+    <header id="navbar" role="banner">
+        <a href="#home" class="nav-logo" aria-label="Coffee Lounge Home">
+            <div class="nav-logo-icon">
+                <!-- Coffee cup SVG icon -->
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path
+                        d="M2 21h16v-2H2v2zm14-9c1.1 0 2-.9 2-2s-.9-2-2-2h-2V6H4v8c0 2.2 1.8 4 4 4h4c1.8 0 3.3-1.2 3.8-2.8.1.1.1.2.2.3zm0-2h-2V8h2c.6 0 1 .4 1 1s-.4 1-1 1zM6 4h2c.6 0 1-.4 1-1s-.4-1-1-1H6c-.6 0-1 .4-1 1s.4 1 1 1zm4 0h2c.6 0 1-.4 1-1s-.4-1-1-1h-2c-.6 0-1 .4-1 1s.4 1 1 1z" />
+                </svg>
+            </div>
+            <div class="nav-logo-text">
+                <span class="nav-logo-name">Coffee Lounge</span>
+                <span class="nav-logo-sub">— Fine Coffee &amp; Lounge —</span>
+            </div>
+        </a>
+
+        <nav aria-label="Primary Navigation">
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About Us</a></li>
+                <li><a href="#menu">Menu</a></li>
+                <li><a href="#gallery">Gallery</a></li>
+                <li><a href="#events">Events</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+
+        <div class="nav-actions">
+            <a href="#menu" class="btn-outline-nav">Order Online</a>
+            <a href="#contact" class="btn-gold-nav">Reserve a Table</a>
+        </div>
+
+        <button class="nav-hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </header>
+
+    <!-- ================================================
+     HERO — SECTION 1
+     ================================================ -->
+    <section id="home" aria-label="Hero">
+        <div id="hero">
+            <div class="hero-video-container">
+                <video class="hero-video" autoplay muted loop playsinline aria-hidden="true"
+                    poster="Images/lounge_interior.jpg">
+                    <source src="Videos/girl-with-coffe.mp4" type="video/mp4" />
+                </video>
+            </div>
+            <div class="hero-overlay" aria-hidden="true"></div>
+
+            <div class="hero-content">
+                <div class="hero-tagline-row">
+                    <span>Est. 2018</span>
+                    <span class="dot"></span>
+                    <span>Specialty Coffee</span>
+                    <span class="dot"></span>
+                    <span>Artisan Cuisine</span>
+                    <span class="dot"></span>
+                    <span>Fine Lounge</span>
+                </div>
+
+                <h1 class="hero-title drift-text">
+                    Where Every Sip<br /><em>Feels Like Home</em>
+                </h1>
+
+                <p class="hero-subtitle">Fine Coffee &amp; Lounge &nbsp;·&nbsp; Crafted with Passion</p>
+
+                <div class="hero-cta-row">
+                    <a href="#menu" class="btn-primary" id="heroMenuBtn">
+                        <i class="fa-solid fa-mug-hot" aria-hidden="true"></i>
+                        Explore Our Menu
+                    </a>
+                    <a href="#contact" class="btn-secondary" id="heroReserveBtn">
+                        <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+                        Reserve a Table
+                    </a>
+                </div>
+            </div>
+
+            <!-- ── Temperature Text Overlay (Elegant Serif) ── -->
+            <div class="hero-temp-overlay" id="heroTempWidget" aria-label="Coffee temperature">
+                <span class="temp-text"><span id="tempNumber">100</span>°C</span>
+            </div>
+
+            <div class="hero-scroll" aria-hidden="true">
+                <span>Scroll</span>
+                <div class="scroll-line"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================================================
+     MARQUEE STRIP
+     ================================================ -->
+    <div class="marquee-strip" aria-hidden="true">
+        <div class="marquee-track">
+            <!-- Items duplicated for seamless loop -->
+            <span class="marquee-item"><span class="star">✦</span> Specialty Coffee <span class="star">✦</span></span>
+            <span class="marquee-item"><span class="star">✦</span> Artisan Teas <span class="star">✦</span></span>
+            <span class="marquee-item"><span class="star">✦</span> Bakery &amp; Desserts <span
+                    class="star">✦</span></span>
+            <span class="marquee-item"><span class="star">✦</span> Savory Bites <span class="star">✦</span></span>
+            <span class="marquee-item"><span class="star">✦</span> Live Music Nights <span class="star">✦</span></span>
+            <span class="marquee-item"><span class="star">✦</span> Private Bookings <span class="star">✦</span></span>
+            <span class="marquee-item"><span class="star">✦</span> Coffee Tasting <span class="star">✦</span></span>
+            <span class="marquee-item"><span class="star">✦</span> Fine Lounge &amp; Dining <span
+                    class="star">✦</span></span>
+            <!-- Duplicate -->
+            <span class="marquee-item"><span class="star">✦</span> Specialty Coffee <span class="star">✦</span></span>
+            <span class="marquee-item"><span class="star">✦</span> Artisan Teas <span class="star">✦</span></span>
+            <span class="marquee-item"><span class="star">✦</span> Bakery &amp; Desserts <span
+                    class="star">✦</span></span>
+            <span class="marquee-item"><span class="star">✦</span> Savory Bites <span class="star">✦</span></span>
+            <span class="marquee-item"><span class="star">✦</span> Live Music Nights <span class="star">✦</span></span>
+            <span class="marquee-item"><span class="star">✦</span> Private Bookings <span class="star">✦</span></span>
+            <span class="marquee-item"><span class="star">✦</span> Coffee Tasting <span class="star">✦</span></span>
+            <span class="marquee-item"><span class="star">✦</span> Fine Lounge &amp; Dining <span
+                    class="star">✦</span></span>
+        </div>
+    </div>
+
+    <!-- ================================================
+     FEATURED PHOTOS SHOWCASE
+     ================================================ -->
+    <section id="featured-photos" class="section featured-photos-section" aria-label="Featured Moments">
+        <div class="container">
+            <div class="section-header reveal" style="margin-bottom:50px;">
+                <span class="tagline">Captured Moments</span>
+                <h2 class="drift-text">Life at Coffee Lounge</h2>
+                <div class="gold-rule" style="margin:16px auto;"></div>
+                <p>Real moments, real people, real passion — this is what Coffee Lounge looks and feels like every
+                    single day.</p>
+            </div>
+
+            <div class="featured-photos-grid">
+
+                <!-- User photo 1 — Waiter serving drinks -->
+                <div class="featured-photo-card reveal reveal-delay-1">
+                    <div class="featured-photo-img-wrap">
+                        <img src="Images/WhatsApp Image 2026-08-09 at 14.37.58 (1).jpeg"
+                            alt="Our waiter delivering vibrant signature drinks to guests at our garden terrace"
+                            loading="lazy" />
+                        <div class="featured-photo-label">
+                            <span class="featured-photo-icon">🌿</span>
+                            <span>Garden Terrace Service</span>
+                        </div>
+                    </div>
+                    <div class="featured-photo-caption">
+                        <p class="featured-photo-title">Crafted &amp; Delivered with Care</p>
+                        <p class="featured-photo-desc">Our team brings every vibrant creation straight to you — from
+                            signature mocktails to refreshing cold brews, served with warmth and a smile.</p>
+                    </div>
+                </div>
+
+                <!-- User photo 2 — Latte art pour -->
+                <div class="featured-photo-card featured-photo-card--tall reveal reveal-delay-2">
+                    <div class="featured-photo-img-wrap">
+                        <img src="Images/WhatsApp Image 2026-08-09 at 14.37.58.jpeg"
+                            alt="Our barista pouring perfect latte art rosette into a blue ceramic cup"
+                            loading="lazy" />
+                        <div class="featured-photo-label">
+                            <span class="featured-photo-icon">☕</span>
+                            <span>Barista Artistry</span>
+                        </div>
+                    </div>
+                    <div class="featured-photo-caption">
+                        <p class="featured-photo-title">Every Pour is a Masterpiece</p>
+                        <p class="featured-photo-desc">Watch our skilled baristas transform steamed milk and espresso
+                            into edible art — each cup a unique creation never made twice.</p>
+                    </div>
+                </div>
+
+                <!-- User photo 3 — Your Mornings Our Coffee -->
+                <div class="featured-photo-card reveal reveal-delay-3">
+                    <div class="featured-photo-img-wrap">
+                        <img src="Images/WhatsApp Image 2026-08-09 at 14.37.59.jpeg"
+                            alt="A peaceful morning at Coffee Lounge — book open, coffee in hand" loading="lazy" />
+                        <div class="featured-photo-label">
+                            <span class="featured-photo-icon">📖</span>
+                            <span>Morning Rituals</span>
+                        </div>
+                    </div>
+                    <div class="featured-photo-caption">
+                        <p class="featured-photo-title">Your Mornings, Our Coffee</p>
+                        <p class="featured-photo-desc">Start your day the right way. Whether it's a quiet read, a work
+                            session, or simply a moment of calm — we'll have your cup ready.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ================================================
+     ABOUT US — SECTION 2
+     ================================================ -->
+    <section id="about" class="section" aria-labelledby="aboutHeading">
+        <div class="container">
+            <div class="about-grid">
+
+                <div class="about-content reveal-left">
+                    <span class="tagline">Our Story</span>
+                    <h2 id="aboutHeading" class="drift-text">
+                        A Sanctuary for<br /><em>Coffee Lovers</em>
+                    </h2>
+                    <div class="gold-rule-full"></div>
+                    <p class="about-text">
+                        Nestled in the heart of the city, Coffee Lounge was born from a singular obsession — crafting
+                        the perfect cup. Since 2018, we've been sourcing the world's finest single-origin beans, roasted
+                        in-house to our exacting standards, and brewed by passionate artisans who treat every pour as a
+                        work of art.
+                    </p>
+                    <p class="about-text">
+                        Our lounge is more than a café — it's a destination. An intimate sanctuary where the aroma of
+                        freshly ground espresso mingles with soft jazz, where conversations flow as freely as our
+                        signature blends, and where every detail, from our hand-thrown ceramic cups to our candlelit
+                        ambiance, reflects our commitment to the extraordinary.
+                    </p>
+                    <p class="about-text">
+                        We partner directly with smallholder farms across Ethiopia, Colombia, and Indonesia — paying
+                        fair prices and building relationships that span generations. Every cup you savor carries the
+                        story of the hands that grew it.
+                    </p>
+
+                    <div class="about-stats">
+                        <div class="stat-item">
+                            <span class="stat-number" data-count="12" data-suffix="+">12+</span>
+                            <span class="stat-label">Origins</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" data-count="6" data-suffix="">6</span>
+                            <span class="stat-label">Years of Excellence</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" data-count="50000" data-suffix="+">50K+</span>
+                            <span class="stat-label">Happy Guests</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="about-image reveal-right">
+                    <img src="Images/coffe.jpg" alt="Expert barista brewing specialty coffee at Coffee Lounge"
+                        loading="lazy" />
+                    <div class="about-badge">
+                        <span class="badge-year">★★★★★</span>
+                        <span class="badge-label">Award Winning Coffee</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ================================================
+     SIGNATURE EXPERIENCE — PARALLAX STRIP
+     ================================================ -->
+    <section id="signature" aria-label="Signature Experience">
+        <div class="signature-bg" style="background-image: url('Images/WhatsApp Image 2026-08-09 at 14.37.59.jpeg');"
+            aria-hidden="true">
+        </div>
+        <div class="signature-overlay" aria-hidden="true"></div>
+        <div class="signature-content">
+            <p class="tagline" style="margin-bottom:20px;">The Coffee Lounge Promise</p>
+            <blockquote class="quote drift-text">
+                "Your Mornings, Our Coffee.<br />Your Evenings, Our Sanctuary."
+            </blockquote>
+            <div class="tagline-row" style="max-width:400px;margin:20px auto 0;">
+                <span>Fine Coffee &amp; Lounge</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================================================
+     MENU — SECTION 3
+     ================================================ -->
+    <section id="menu" class="section" aria-labelledby="menuHeading">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="tagline">Curated for You</span>
+                <h2 id="menuHeading" class="drift-text">Our Signature Menu</h2>
+                <div class="gold-rule" style="margin:16px auto;"></div>
+                <p>From single-origin pour-overs to indulgent pastries, every item on our menu is crafted with the
+                    finest ingredients and prepared with unwavering care.</p>
+            </div>
+
+            <!-- Tabs -->
+            <div class="menu-tabs" role="tablist" aria-label="Menu Categories">
+                <button class="menu-tab active" data-tab="coffee" role="tab" aria-selected="true" id="tab-coffee">☕
+                    Specialty Coffee</button>
+                <button class="menu-tab" data-tab="tea" role="tab" aria-selected="false" id="tab-tea">🍵 Artisan
+                    Tea</button>
+                <button class="menu-tab" data-tab="bakery" role="tab" aria-selected="false" id="tab-bakery">🥐 Bakery
+                    &amp; Desserts</button>
+                <button class="menu-tab" data-tab="savory" role="tab" aria-selected="false" id="tab-savory">🍽 Savory
+                    Bites</button>
+            </div>
+
+            <!-- COFFEE PANEL -->
+            <div class="menu-panel active" id="menu-coffee" role="tabpanel" aria-labelledby="tab-coffee">
+
+                <article class="menu-card reveal reveal-delay-1">
+                    <div class="menu-card-img-wrapper">
+                        <img class="menu-card-img" src="Images/signature_espresso_blend.png" alt="Signature Espresso Blend"
+                            loading="lazy" />
+                    </div>
+                    <div class="menu-card-body">
+                        <div class="menu-card-tags">
+                            <span class="tag tag-sig">Signature</span>
+                            <span class="tag tag-hot">Hot</span>
+                        </div>
+                        <h3 class="menu-card-name">Signature Espresso Blend</h3>
+                        <p class="menu-card-desc">Our house blend — a symphony of dark chocolate, toasted walnut, and a
+                            whisper of orange zest. Double shot, velvet crema.</p>
+                        <div class="menu-card-footer">
+                            <span class="menu-card-price">₹ 280</span>
+                            <button class="menu-card-order" type="button">Add to Order</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="menu-card reveal reveal-delay-2">
+                    <div class="menu-card-img-wrapper">
+                        <img class="menu-card-img" src="Images/WhatsApp Image 2026-08-09 at 14.37.58.jpeg"
+                            alt="Barista Latte Art" loading="lazy" />
+                    </div>
+                    <div class="menu-card-body">
+                        <div class="menu-card-tags">
+                            <span class="tag tag-sig">Signature</span>
+                        </div>
+                        <h3 class="menu-card-name">Artisan Latte</h3>
+                        <p class="menu-card-desc">Silky micro-foam poured over a ristretto shot. Our baristas craft a
+                            unique rosette in every cup — a moment of edible art.</p>
+                        <div class="menu-card-footer">
+                            <span class="menu-card-price">₹ 340</span>
+                            <button class="menu-card-order" type="button">Add to Order</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="menu-card reveal reveal-delay-3">
+                    <div class="menu-card-img-wrapper">
+                        <img class="menu-card-img" src="Images/ethiopian_pourover.png" alt="Ethiopian Single Origin Pour Over"
+                            loading="lazy" />
+                    </div>
+                    <div class="menu-card-body">
+                        <div class="menu-card-tags">
+                            <span class="tag tag-vegan">Vegan</span>
+                            <span class="tag tag-gf">GF</span>
+                            <span class="tag tag-sig">Signature</span>
+                        </div>
+                        <h3 class="menu-card-name">Ethiopian Pour-Over</h3>
+                        <p class="menu-card-desc">Single-origin Yirgacheffe, hand-poured through a Hario V60. Blueberry,
+                            jasmine, and a honey-sweet finish. An extraordinary experience.</p>
+                        <div class="menu-card-footer">
+                            <span class="menu-card-price">₹ 420</span>
+                            <button class="menu-card-order" type="button">Add to Order</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="menu-card reveal reveal-delay-1">
+                    <div class="menu-card-img-wrapper">
+                        <img class="menu-card-img" src="Images/coffe.jpg" alt="Cold Brew Reserve"
+                            loading="lazy" />
+                    </div>
+                    <div class="menu-card-body">
+                        <div class="menu-card-tags">
+                            <span class="tag tag-vegan">Vegan</span>
+                            <span class="tag tag-gf">GF</span>
+                        </div>
+                        <h3 class="menu-card-name">Cold Brew Reserve</h3>
+                        <p class="menu-card-desc">18-hour slow-steeped Colombian beans, served over hand-cut crystal
+                            ice. Smooth, bold, and utterly refreshing.</p>
+                        <div class="menu-card-footer">
+                            <span class="menu-card-price">₹ 360</span>
+                            <button class="menu-card-order" type="button">Add to Order</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="menu-card reveal reveal-delay-2">
+                    <div class="menu-card-img-wrapper">
+                        <img class="menu-card-img" src="Images/flat_white.png" alt="Flat White" loading="lazy" />
+                    </div>
+                    <div class="menu-card-body">
+                        <div class="menu-card-tags">
+                            <span class="tag tag-hot">Hot</span>
+                        </div>
+                        <h3 class="menu-card-name">Flat White</h3>
+                        <p class="menu-card-desc">A shorter, more intense latte with a higher coffee-to-milk ratio.
+                            Velvety, concentrated, and deeply satisfying.</p>
+                        <div class="menu-card-footer">
+                            <span class="menu-card-price">₹ 310</span>
+                            <button class="menu-card-order" type="button">Add to Order</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="menu-card reveal reveal-delay-3">
+                    <div class="menu-card-img-wrapper">
+                        <img class="menu-card-img" src="Images/dark_velvet_mocha.png" alt="Signature Mocha"
+                            loading="lazy" />
+                    </div>
+                    <div class="menu-card-body">
+                        <div class="menu-card-tags">
+                            <span class="tag tag-sig">Signature</span>
+                            <span class="tag tag-hot">Hot</span>
+                        </div>
+                        <h3 class="menu-card-name">Dark Velvet Mocha</h3>
+                        <p class="menu-card-desc">Belgian 70% dark chocolate melted into our espresso, crowned with
+                            hand-whipped cream and dusted with cocoa powder.</p>
+                        <div class="menu-card-footer">
+                            <span class="menu-card-price">₹ 390</span>
+                            <button class="menu-card-order" type="button">Add to Order</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="menu-card reveal reveal-delay-1">
+                    <div class="menu-card-img-wrapper">
+                        <img class="menu-card-img" src="Images/spanish_saffron_latte.png" alt="Spanish Saffron Gold Latte"
+                            loading="lazy" />
+                    </div>
+                    <div class="menu-card-body">
+                        <div class="menu-card-tags">
+                            <span class="tag tag-sig">Signature</span>
+                            <span class="tag tag-hot">Hot</span>
+                        </div>
+                        <h3 class="menu-card-name">Spanish Saffron Gold Latte</h3>
+                        <p class="menu-card-desc">Rich espresso blended with condensed milk, infused with Spanish saffron threads &amp; 24k edible gold dust.</p>
+                        <div class="menu-card-footer">
+                            <span class="menu-card-price">₹ 450</span>
+                            <button class="menu-card-order" type="button">Add to Order</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="menu-card reveal reveal-delay-2">
+                    <div class="menu-card-img-wrapper">
+                        <img class="menu-card-img" src="Images/smoked_caramel_cold_brew.png" alt="Smoked Salted Caramel Cold Brew"
+                            loading="lazy" />
+                    </div>
+                    <div class="menu-card-body">
+                        <div class="menu-card-tags">
+                            <span class="tag tag-vegan">Vegan</span>
+                            <span class="tag tag-gf">GF</span>
+                            <span class="tag tag-sig">Signature</span>
+                        </div>
+                        <h3 class="menu-card-name">Smoked Salted Caramel Cold Brew</h3>
+                        <p class="menu-card-desc">18-hour cold brew infused with house smoked caramel, capped with a dense cloud of vanilla cold foam.</p>
+                        <div class="menu-card-footer">
+                            <span class="menu-card-price">₹ 390</span>
+                            <button class="menu-card-order" type="button">Add to Order</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="menu-card reveal reveal-delay-3">
+                    <div class="menu-card-img-wrapper">
+                        <img class="menu-card-img" src="Images/vanilla_affogato_al_caffe.png" alt="Vanilla Bean Affogato Al Caffè"
+                            loading="lazy" />
+                    </div>
+                    <div class="menu-card-body">
+                        <div class="menu-card-tags">
+                            <span class="tag tag-sig">Signature</span>
+                        </div>
+                        <h3 class="menu-card-name">Vanilla Bean Affogato Al Caffè</h3>
+                        <p class="menu-card-desc">Artisanal Tahitian vanilla bean gelato drowned in a freshly pulled double shot of single-origin espresso &amp; dark chocolate curls.</p>
+                        <div class="menu-card-footer">
+                            <span class="menu-card-price">₹ 440</span>
+                            <button class="menu-card-order" type="button">Add to Order</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="menu-card reveal reveal-delay-1">
+                    <div class="menu-card-img-wrapper">
+                        <img class="menu-card-img" src="Images/kashmiri_rose_espresso.png" alt="Kashmiri Rose & Pistachio Latte"
+                            loading="lazy" />
+                    </div>
+                    <div class="menu-card-body">
+                        <div class="menu-card-tags">
+                            <span class="tag tag-sig">Signature</span>
+                            <span class="tag tag-hot">Hot</span>
+                        </div>
+                        <h3 class="menu-card-name">Kashmiri Rose &amp; Pistachio Latte</h3>
+                        <p class="menu-card-desc">Velvety espresso with white chocolate rose milk, finished with crushed Sicilian pistachios &amp; dried damask rose petals.</p>
+                        <div class="menu-card-footer">
+                            <span class="menu-card-price">₹ 410</span>
+                            <button class="menu-card-order" type="button">Add to Order</button>
+                        </div>
+                    </div>
+                </article>
+
+            </div><!-- /coffee panel -->
+
+            <!-- TEA PANEL -->
+            <div class="menu-panel" id="menu-tea" role="tabpanel" aria-labelledby="tab-tea">
+
+                <article class="menu-card reveal reveal-delay-1">
+                    <div class="menu-card-img-wrapper">
+                        <img class="menu-card-img" src="Images/darjeeling_tea.png" alt="First Flush Darjeeling"
+                            loading="lazy" />
+                    </div>
+                    <div class="menu-card-body">
+                        <div class="menu-card-tags">
+                            <span class="tag tag-vegan">Vegan</span>
+                            <span class="tag tag-gf">GF</span>
+                            <span class="tag tag-sig">Signature</span>
+                        </div>
+                        <h3 class="menu-card-name">First Flush Darjeeling</h3>
+                        <p class="menu-card-desc">The champagne of teas. Light, muscatel, and floral — brewed at 80°C
+                            for exactly 3 minutes. Served in bone china.</p>
+                        <div class="menu-card-footer">
+                            <span class="menu-card-price">₹ 320</span>
+                            <button class="menu-card-order" type="button">Add to Order</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="menu-card reveal reveal-delay-2">
+                    <div class="menu-card-img-wrapper">
+                        <img class="menu-card-img" src="Images/ceremonial_matcha.png" alt="Ceremonial Matcha"
+                            loading="lazy" />
+                    </div>
+                    <div class="menu-card-body">
+                        <div class="menu-card-tags">
+                            <span class="tag tag-vegan">Vegan</span>
+                            <span class="tag tag-gf">GF</span>
+                        </div>
+                        <h3 class="menu-card-name">Ceremonial Grade Matcha</h3>
+                        <p class="menu-card-desc">Japanese ceremonial matcha whisked to silky perfection. Earthy, umami,
+                            and subtly sweet. Available hot or iced with oat milk.</p>
+                        <div class="menu-card-footer">
+                            <span class="menu-card-price">₹ 380</span>
+                            <button class="menu-card-order" type="button">Add to Order</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="menu-card reveal reveal-delay-3">
+                    <div class="menu-card-img-wrapper">
+                        <img class="menu-card-img" src="Images/rose_oolong_tea.png" alt="Rose Oolong Blend"
+                            loading="lazy" />
+                    </div>
+                    <div class="menu-card-body">
+                        <div class="menu-card-tags">
+                            <span class="tag tag-vegan">Vegan</span>
+                            <span class="tag tag-sig">Signature</span>
+                        </div>
+                        <h3 class="menu-card-name">Rose Oolong Blend</h3>
+                        <p class="menu-card-desc">Taiwanese high-mountain oolong blended with dried rose petals and
+                            vanilla. A floral, peachy brew with a lingering sweetness.</p>
+                        <div class="menu-card-footer">
+                            <span class="menu-card-price">₹ 340</span>
+                            <button class="menu-card-order" type="button">Add to Order</button>
+                        </div>
+                    </div>
+                </article>
+
+            </div><!-- /tea panel -->
+
+            <!-- BAKERY PANEL -->
+            <div class="menu-panel" id="menu-bakery" role="tabpanel" aria-labelledby="tab-bakery">
+
+                <article class="menu-card reveal reveal-delay-1">
+                    <div class="menu-card-img-wrapper">
+                        <img class="menu-card-img" src="Images/almond_croissant.png" alt="Almond Croissant"
+                            loading="lazy" />
+                    </div>
+                    <div class="menu-card-body">
+                        <div class="menu-card-tags">
+                            <span class="tag tag-sig">Signature</span>
+                        </div>
+                        <h3 class="menu-card-name">Twice-Baked Almond Croissant</h3>
+                        <p class="menu-card-desc">Buttery, laminated croissant filled with frangipane cream, rolled in
+                            toasted almond flakes, and dusted with powdered sugar.</p>
+                        <div class="menu-card-footer">
+                            <span class="menu-card-price">₹ 240</span>
+                            <button class="menu-card-order" type="button">Add to Order</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="menu-card reveal reveal-delay-2">
+                    <div class="menu-card-img-wrapper">
+                        <img class="menu-card-img" src="Images/dark_chocolate_tart.png" alt="Dark Chocolate Tart"
+                            loading="lazy" />
+                    </div>
+                    <div class="menu-card-body">
+                        <div class="menu-card-tags">
+                            <span class="tag tag-vegan">Vegan</span>
+                            <span class="tag tag-sig">Signature</span>
+                        </div>
+                        <h3 class="menu-card-name">Dark Chocolate Ganache Tart</h3>
+                        <p class="menu-card-desc">Valrhona 70% ganache in a pâte sablée shell, topped with sea salt
+                            flakes and edible gold dust. Pure indulgence.</p>
+                        <div class="menu-card-footer">
+                            <span class="menu-card-price">₹ 320</span>
+                            <button class="menu-card-order" type="button">Add to Order</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="menu-card reveal reveal-delay-3">
+                    <div class="menu-card-img-wrapper">
+                        <img class="menu-card-img" src="Images/artisan_pastries.jpg" alt="Seasonal Macaron Selection"
+                            loading="lazy" />
+                    </div>
+                    <div class="menu-card-body">
+                        <div class="menu-card-tags">
+                            <span class="tag tag-gf">GF</span>
+                        </div>
+                        <h3 class="menu-card-name">Seasonal Macaron Selection</h3>
+                        <p class="menu-card-desc">A curated box of six French macarons in rotating seasonal flavors —
+                            from passion fruit to lavender honey to pistachio rose.</p>
+                        <div class="menu-card-footer">
+                            <span class="menu-card-price">₹ 480</span>
+                            <button class="menu-card-order" type="button">Add to Order</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="menu-card reveal reveal-delay-1">
+                    <div class="menu-card-img-wrapper">
+                        <img class="menu-card-img" src="Images/blueberry_lemon_scone.jpg" alt="Blueberry Lemon Scone"
+                            loading="lazy" />
+                    </div>
+                    <div class="menu-card-body">
+                        <div class="menu-card-tags">
+                            <span class="tag tag-sig">Signature</span>
+                            <span class="tag tag-hot">Hot</span>
+                        </div>
+                        <h3 class="menu-card-name">Blueberry Lemon Thyme Scone</h3>
+                        <p class="menu-card-desc">Warm buttery scone packed with wild blueberries, fresh lemon zest &amp; a whisper of thyme, served with clotted cream &amp; berry compote.</p>
+                        <div class="menu-card-footer">
+                            <span class="menu-card-price">₹ 290</span>
+                            <button class="menu-card-order" type="button">Add to Order</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="menu-card reveal reveal-delay-2">
+                    <div class="menu-card-img-wrapper">
+                        <img class="menu-card-img" src="Images/pistachio_eclair.jpg" alt="Pistachio Praline Éclair"
+                            loading="lazy" />
+                    </div>
+                    <div class="menu-card-body">
+                        <div class="menu-card-tags">
+                            <span class="tag tag-sig">Signature</span>
+                        </div>
+                        <h3 class="menu-card-name">Pistachio Praline Éclair</h3>
+                        <p class="menu-card-desc">Choux pastry filled with roasted pistachio pastry cream, topped with white chocolate glaze &amp; crushed Sicilian pistachios.</p>
+                        <div class="menu-card-footer">
+                            <span class="menu-card-price">₹ 360</span>
+                            <button class="menu-card-order" type="button">Add to Order</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="menu-card reveal reveal-delay-3">
+                    <div class="menu-card-img-wrapper">
+                        <img class="menu-card-img" src="Images/basque_cheesecake.jpg" alt="Basque Cheesecake"
+                            loading="lazy" />
+                    </div>
+                    <div class="menu-card-body">
+                        <div class="menu-card-tags">
+                            <span class="tag tag-gf">GF</span>
+                            <span class="tag tag-sig">Signature</span>
+                        </div>
+                        <h3 class="menu-card-name">Vanilla Bean Basque Cheesecake</h3>
+                        <p class="menu-card-desc">Crustless Spanish caramelized cheesecake with a creamy molten vanilla center, served with fresh raspberry reduction.</p>
+                        <div class="menu-card-footer">
+                            <span class="menu-card-price">₹ 380</span>
+                            <button class="menu-card-order" type="button">Add to Order</button>
+                        </div>
+                    </div>
+                </article>
+
+            </div><!-- /bakery panel -->
+
+            <!-- SAVORY PANEL -->
+            <div class="menu-panel" id="menu-savory" role="tabpanel" aria-labelledby="tab-savory">
+
+                <article class="menu-card reveal reveal-delay-1">
+                    <div class="menu-card-img-wrapper">
+                        <img class="menu-card-img" src="Images/avocado_toast.jpg" alt="Smashed Avocado Toast"
+                            loading="lazy" />
+                    </div>
+                    <div class="menu-card-body">
+                        <div class="menu-card-tags">
+                            <span class="tag tag-vegan">Vegan</span>
+                            <span class="tag tag-sig">Signature</span>
+                        </div>
+                        <h3 class="menu-card-name">Smashed Avocado Toast</h3>
+                        <p class="menu-card-desc">House sourdough, whipped ricotta, Hass avocado, heirloom cherry
+                            tomatoes, micro herbs, chilli oil, and a poached egg.</p>
+                        <div class="menu-card-footer">
+                            <span class="menu-card-price">₹ 480</span>
+                            <button class="menu-card-order" type="button">Add to Order</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="menu-card reveal reveal-delay-2">
+                    <div class="menu-card-img-wrapper">
+                        <img class="menu-card-img" src="Images/smoked_salmon_bagel.jpg" alt="Smoked Salmon Bagel"
+                            loading="lazy" />
+                    </div>
+                    <div class="menu-card-body">
+                        <div class="menu-card-tags">
+                            <span class="tag tag-gf">GF Option</span>
+                        </div>
+                        <h3 class="menu-card-name">Smoked Salmon Bagel</h3>
+                        <p class="menu-card-desc">House-baked sesame bagel, cream cheese, Norwegian smoked salmon,
+                            capers, red onion, and fresh dill. Classic, elevated.</p>
+                        <div class="menu-card-footer">
+                            <span class="menu-card-price">₹ 560</span>
+                            <button class="menu-card-order" type="button">Add to Order</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="menu-card reveal reveal-delay-3">
+                    <div class="menu-card-img-wrapper">
+                        <img class="menu-card-img" src="Images/garden_bruschetta.jpg" alt="Garden Bruschetta"
+                            loading="lazy" />
+                    </div>
+                    <div class="menu-card-body">
+                        <div class="menu-card-tags">
+                            <span class="tag tag-vegan">Vegan</span>
+                            <span class="tag tag-gf">GF</span>
+                        </div>
+                        <h3 class="menu-card-name">Garden Bruschetta Board</h3>
+                        <p class="menu-card-desc">Toasted ciabatta bites topped with heirloom tomatoes, fresh basil,
+                            aged balsamic, and a drizzle of cold-pressed olive oil.</p>
+                        <div class="menu-card-footer">
+                            <span class="menu-card-price">₹ 420</span>
+                            <button class="menu-card-order" type="button">Add to Order</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="menu-card reveal reveal-delay-1">
+                    <div class="menu-card-img-wrapper">
+                        <img class="menu-card-img" src="Images/truffle_crostini.jpg" alt="Truffle Mushroom Crostini"
+                            loading="lazy" />
+                    </div>
+                    <div class="menu-card-body">
+                        <div class="menu-card-tags">
+                            <span class="tag tag-hot">Hot</span>
+                            <span class="tag tag-sig">Signature</span>
+                        </div>
+                        <h3 class="menu-card-name">Truffle &amp; Wild Mushroom Crostini</h3>
+                        <p class="menu-card-desc">Artisan sourdough crostini topped with sautéed wild chanterelles, melted fontina cheese, black truffle oil &amp; fresh thyme.</p>
+                        <div class="menu-card-footer">
+                            <span class="menu-card-price">₹ 490</span>
+                            <button class="menu-card-order" type="button">Add to Order</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="menu-card reveal reveal-delay-2">
+                    <div class="menu-card-img-wrapper">
+                        <img class="menu-card-img" src="Images/burrata_tartine.jpg" alt="Prosciutto Burrata Tartine"
+                            loading="lazy" />
+                    </div>
+                    <div class="menu-card-body">
+                        <div class="menu-card-tags">
+                            <span class="tag tag-sig">Signature</span>
+                        </div>
+                        <h3 class="menu-card-name">Prosciutto &amp; Fig Burrata Tartine</h3>
+                        <p class="menu-card-desc">Creamy Italian burrata cheese over rustic sourdough, layered with thin prosciutto di Parma, fresh figs &amp; aged balsamic glaze.</p>
+                        <div class="menu-card-footer">
+                            <span class="menu-card-price">₹ 540</span>
+                            <button class="menu-card-order" type="button">Add to Order</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="menu-card reveal reveal-delay-3">
+                    <div class="menu-card-img-wrapper">
+                        <img class="menu-card-img" src="Images/halloumi_sliders.jpg" alt="Mediterranean Halloumi Sliders"
+                            loading="lazy" />
+                    </div>
+                    <div class="menu-card-body">
+                        <div class="menu-card-tags">
+                            <span class="tag tag-hot">Hot</span>
+                            <span class="tag tag-gf">GF Option</span>
+                        </div>
+                        <h3 class="menu-card-name">Mediterranean Halloumi Sliders</h3>
+                        <p class="menu-card-desc">Grilled Cypriot halloumi cheese on brioche buns with roasted red pepper hummus, wild arugula &amp; pomegranate reduction.</p>
+                        <div class="menu-card-footer">
+                            <span class="menu-card-price">₹ 460</span>
+                            <button class="menu-card-order" type="button">Add to Order</button>
+                        </div>
+                    </div>
+                </article>
+
+            </div><!-- /savory panel -->
+
+        </div><!-- /container -->
+    </section>
+
+    <!-- ================================================
+     GALLERY — SECTION 4
+     ================================================ -->
+    <section id="gallery" class="section" aria-labelledby="galleryHeading">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="tagline">Our World</span>
+                <h2 id="galleryHeading" class="drift-text">The Coffee Lounge Experience</h2>
+                <div class="gold-rule" style="margin:16px auto;"></div>
+                <p>Step inside. Breathe in the aroma. From barista craft to lounge ambiance — every corner of Coffee
+                    Lounge is a story waiting to be discovered.</p>
+            </div>
+
+            <div class="gallery-grid">
+
+                <div class="gallery-item wide" tabindex="0" role="button" aria-label="View lounge interior">
+                    <img src="Images/lounge_interior.jpg"
+                        alt="Luxurious Coffee Lounge interior with warm amber lighting" loading="lazy" />
+                    <div class="gallery-overlay">
+                        <span class="gallery-overlay-text">The Lounge</span>
+                    </div>
+                </div>
+
+                <div class="gallery-item" tabindex="0" role="button" aria-label="View barista craftsmanship">
+                    <img src="Images/WhatsApp Image 2026-08-09 at 14.37.58.jpeg" alt="Barista pouring latte art"
+                        loading="lazy" />
+                    <div class="gallery-overlay">
+                        <span class="gallery-overlay-text">Barista Craft</span>
+                    </div>
+                </div>
+
+                <div class="gallery-item" tabindex="0" role="button" aria-label="View coffee service">
+                    <img src="Images/WhatsApp Image 2026-08-09 at 14.37.58 (1).jpeg"
+                        alt="Waiter serving drinks at outdoor terrace" loading="lazy" />
+                    <div class="gallery-overlay">
+                        <span class="gallery-overlay-text">Table Service</span>
+                    </div>
+                </div>
+
+                <div class="gallery-item" tabindex="0" role="button" aria-label="View artisan pastries">
+                    <img src="Images/artisan_pastries.jpg" alt="Artisan pastries and macarons on marble"
+                        loading="lazy" />
+                    <div class="gallery-overlay">
+                        <span class="gallery-overlay-text">Artisan Bakery</span>
+                    </div>
+                </div>
+
+                <div class="gallery-item tall" tabindex="0" role="button" aria-label="View coffee beans">
+                    <img src="Images/coffee_beans.jpg" alt="Premium roasted coffee beans" loading="lazy" />
+                    <div class="gallery-overlay">
+                        <span class="gallery-overlay-text">Our Beans</span>
+                    </div>
+                </div>
+
+                <div class="gallery-item" tabindex="0" role="button" aria-label="View specialty drinks">
+                    <img src="Images/specialty_drinks.jpg" alt="Specialty coffee drinks flat lay" loading="lazy" />
+                    <div class="gallery-overlay">
+                        <span class="gallery-overlay-text">Signature Drinks</span>
+                    </div>
+                </div>
+
+                <div class="gallery-item" tabindex="0" role="button" aria-label="View outdoor terrace">
+                    <img src="Images/outdoor_seating.jpg" alt="Elegant outdoor seating with string lights"
+                        loading="lazy" />
+                    <div class="gallery-overlay">
+                        <span class="gallery-overlay-text">Garden Terrace</span>
+                    </div>
+                </div>
+
+                <div class="gallery-item" tabindex="0" role="button" aria-label="View brewing process">
+                    <img src="Images/coffe.jpg" alt="Expert barista brewing specialty coffee" loading="lazy" />
+                    <div class="gallery-overlay">
+                        <span class="gallery-overlay-text">The Craft</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ================================================
+     EVENTS & LOUNGE LIFE — SECTION 5
+     ================================================ -->
+    <section id="events" class="section" aria-labelledby="eventsHeading">
+        <div class="events-video-bg" aria-hidden="true">
+            <video autoplay muted loop playsinline>
+                <source src="Images/WhatsApp Video 2026-08-09 at 14.37.57.mp4" type="video/mp4" />
+            </video>
+        </div>
+        <div class="events-video-overlay" aria-hidden="true"></div>
+
+        <div class="container events-content">
+            <div class="section-header reveal">
+                <span class="tagline">Lounge Life</span>
+                <h2 id="eventsHeading" class="drift-text">Events &amp; Experiences</h2>
+                <div class="gold-rule" style="margin:16px auto;"></div>
+                <p>Beyond the cup — Coffee Lounge is a living, breathing venue where culture, music, and community come
+                    alive every week.</p>
+            </div>
+
+            <div class="events-grid">
+
+                <div class="event-card reveal reveal-delay-1">
+                    <div class="event-icon">🎵</div>
+                    <h3>Live Music Nights</h3>
+                    <p>Immerse yourself in soulful acoustic performances every Friday and Saturday evening. Jazz, indie,
+                        and classical — an ever-changing soundtrack.</p>
+                    <span class="event-schedule">Every Fri &amp; Sat · 7:00 PM – 10:00 PM</span>
+                </div>
+
+                <div class="event-card reveal reveal-delay-2">
+                    <div class="event-icon">🎤</div>
+                    <h3>Open Mic Sessions</h3>
+                    <p>A stage for storytellers, poets, and musicians. Open mic nights celebrate raw talent in an
+                        intimate, candlelit setting with warm applause.</p>
+                    <span class="event-schedule">Every Wednesday · 6:30 PM</span>
+                </div>
+
+                <div class="event-card reveal reveal-delay-3">
+                    <div class="event-icon">☕</div>
+                    <h3>Coffee Tasting Workshop</h3>
+                    <p>Journey through origins with our head barista. Learn to detect tasting notes, master brewing
+                        methods, and discover your perfect cup.</p>
+                    <span class="event-schedule">Every Sunday · 10:00 AM · Limited Seats</span>
+                </div>
+
+                <div class="event-card reveal reveal-delay-4">
+                    <div class="event-icon">🏛</div>
+                    <h3>Private Bookings</h3>
+                    <p>Transform Coffee Lounge into your exclusive venue. Ideal for corporate gatherings, celebrations,
+                        and intimate dinner parties.</p>
+                    <span class="event-schedule">Available 7 Days · Enquire for Details</span>
+                </div>
+
+            </div>
+
+            <div style="text-align:center;margin-top:50px;" class="reveal">
+                <a href="#contact" class="btn-primary">Enquire About Events</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================================================
+     TESTIMONIALS — SECTION 6
+     ================================================ -->
+    <section id="testimonials" aria-label="Guest Reviews">
+        <div class="container">
+            <div class="section-header reveal" style="margin-bottom:40px;">
+                <span class="tagline">Guest Stories</span>
+                <h2 class="drift-text">Words from Our Guests</h2>
+                <div class="gold-rule" style="margin:16px auto;"></div>
+            </div>
+        </div>
+
+        <div class="testimonials-track" aria-label="Customer testimonials carousel">
+            <div class="testimonials-slider">
+                <!-- 6 real reviews, duplicated for loop -->
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">
+                        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                    </div>
+                    <p class="testimonial-text">"The Ethiopian pour-over was a revelation. I've had coffee all over the
+                        world and this is genuinely one of the best cups I've ever experienced. The ambiance is
+                        breathtaking."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">A</div>
+                        <div>
+                            <p class="author-name">Aisha Mehta</p>
+                            <p class="author-detail">Food Critic · Mumbai</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">
+                        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                    </div>
+                    <p class="testimonial-text">"We booked a private event here for our team dinner and it was
+                        absolutely spectacular. The food, the service, the atmosphere — Coffee Lounge exceeded every
+                        expectation."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">R</div>
+                        <div>
+                            <p class="author-name">Rahul Srinivasan</p>
+                            <p class="author-detail">Tech Entrepreneur · Bangalore</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">
+                        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                    </div>
+                    <p class="testimonial-text">"The latte art alone is worth visiting for! But it's the entire
+                        experience — the music, the warm lighting, the incredible pastries — that keeps me coming back
+                        every single weekend."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">P</div>
+                        <div>
+                            <p class="author-name">Priya Nair</p>
+                            <p class="author-detail">Interior Designer · Kochi</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">
+                        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                    </div>
+                    <p class="testimonial-text">"I attended the coffee tasting workshop and it genuinely changed how I
+                        think about coffee. The knowledge, passion, and hospitality of the team is unmatched."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">K</div>
+                        <div>
+                            <p class="author-name">Karthik Rajan</p>
+                            <p class="author-detail">Coffee Enthusiast · Chennai</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">
+                        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                    </div>
+                    <p class="testimonial-text">"The dark chocolate ganache tart paired with the Darjeeling tea — a
+                        combination I'll never forget. Coffee Lounge understands the art of flavour pairing
+                        beautifully."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">S</div>
+                        <div>
+                            <p class="author-name">Shreya Kapoor</p>
+                            <p class="author-detail">Pastry Chef · Delhi</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">
+                        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                    </div>
+                    <p class="testimonial-text">"The live music on Friday nights transforms this place into something
+                        truly magical. It's our family's favourite spot — the kids love the hot chocolate and the adults
+                        love everything else!"</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">V</div>
+                        <div>
+                            <p class="author-name">Vikram Iyer</p>
+                            <p class="author-detail">Author · Hyderabad</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Duplicated for infinite scroll -->
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">
+                        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                    </div>
+                    <p class="testimonial-text">"The Ethiopian pour-over was a revelation. I've had coffee all over the
+                        world and this is genuinely one of the best cups I've ever experienced. The ambiance is
+                        breathtaking."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">A</div>
+                        <div>
+                            <p class="author-name">Aisha Mehta</p>
+                            <p class="author-detail">Food Critic · Mumbai</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">
+                        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                    </div>
+                    <p class="testimonial-text">"We booked a private event here for our team dinner and it was
+                        absolutely spectacular. The food, the service, the atmosphere — Coffee Lounge exceeded every
+                        expectation."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">R</div>
+                        <div>
+                            <p class="author-name">Rahul Srinivasan</p>
+                            <p class="author-detail">Tech Entrepreneur · Bangalore</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">
+                        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                    </div>
+                    <p class="testimonial-text">"The latte art alone is worth visiting for! But it's the entire
+                        experience — the music, the warm lighting, the incredible pastries — that keeps me coming back
+                        every single weekend."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">P</div>
+                        <div>
+                            <p class="author-name">Priya Nair</p>
+                            <p class="author-detail">Interior Designer · Kochi</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">
+                        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                    </div>
+                    <p class="testimonial-text">"I attended the coffee tasting workshop and it genuinely changed how I
+                        think about coffee. The knowledge, passion, and hospitality of the team is unmatched."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">K</div>
+                        <div>
+                            <p class="author-name">Karthik Rajan</p>
+                            <p class="author-detail">Coffee Enthusiast · Chennai</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">
+                        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                    </div>
+                    <p class="testimonial-text">"The dark chocolate ganache tart paired with the Darjeeling tea — a
+                        combination I'll never forget. Coffee Lounge understands the art of flavour pairing
+                        beautifully."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">S</div>
+                        <div>
+                            <p class="author-name">Shreya Kapoor</p>
+                            <p class="author-detail">Pastry Chef · Delhi</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">
+                        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                    </div>
+                    <p class="testimonial-text">"The live music on Friday nights transforms this place into something
+                        truly magical. It's our family's favourite spot!"</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">V</div>
+                        <div>
+                            <p class="author-name">Vikram Iyer</p>
+                            <p class="author-detail">Author · Hyderabad</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================================================
+     CONTACT — SECTION 7
+     ================================================ -->
+    <section id="contact" class="section" aria-labelledby="contactHeading">
+        <div class="container">
+            <div class="contact-grid">
+
+                <div class="contact-info reveal-left">
+                    <span class="tagline">Find Us</span>
+                    <h2 id="contactHeading" class="drift-text">Visit &amp; Connect</h2>
+                    <div class="gold-rule-full"></div>
+                    <p>We'd love to welcome you to Coffee Lounge. Whether you're planning a visit, a special
+                        reservation, or a private event — our team is here to make your experience extraordinary.</p>
+
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <div class="contact-icon"><i class="fa-solid fa-location-dot" aria-hidden="true"></i></div>
+                            <div class="contact-item-content">
+                                <p class="contact-item-label">Location</p>
+                                <p class="contact-item-value">12, Prestige Boulevard, MG Road<br />Bangalore — 560 001,
+                                    Karnataka, India</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon"><i class="fa-solid fa-phone" aria-hidden="true"></i></div>
+                            <div class="contact-item-content">
+                                <p class="contact-item-label">Reservations</p>
+                                <p class="contact-item-value">+91 80 4567 8900<br />+91 98765 43210</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon"><i class="fa-solid fa-envelope" aria-hidden="true"></i></div>
+                            <div class="contact-item-content">
+                                <p class="contact-item-label">Email</p>
+                                <p class="contact-item-value">hello@coffeelounge.in<br />events@coffeelounge.in</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 8px;">
+                        <p class="tagline" style="margin-bottom:16px;">Opening Hours</p>
+                        <table class="hours-table" aria-label="Opening hours">
+                            <tr>
+                                <td>Monday – Thursday</td>
+                                <td>7:00 AM – 11:00 PM</td>
+                            </tr>
+                            <tr>
+                                <td>Friday</td>
+                                <td>7:00 AM – 12:00 AM</td>
+                            </tr>
+                            <tr class="today">
+                                <td><strong>Saturday</strong> ✦</td>
+                                <td><strong>8:00 AM – 12:00 AM</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Sunday</td>
+                                <td>8:00 AM – 11:00 PM</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="reveal-right">
+                    <div class="contact-form">
+                        <h3>Make a Reservation</h3>
+                        <p class="form-sub">Reserve your table or enquire about private events</p>
+
+                        <form id="reservationForm" novalidate>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" for="guestName">Full Name</label>
+                                    <input class="form-input" type="text" id="guestName" name="name"
+                                        placeholder="Your name" required autocomplete="name" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="guestPhone">Phone Number</label>
+                                    <input class="form-input" type="tel" id="guestPhone" name="phone"
+                                        placeholder="+91 _____ _____" autocomplete="tel" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="guestEmail">Email Address</label>
+                                <input class="form-input" type="email" id="guestEmail" name="email"
+                                    placeholder="your@email.com" required autocomplete="email" />
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" for="reservationDate">Date</label>
+                                    <input class="form-input" type="date" id="reservationDate" name="date" required />
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="reservationTime">Time</label>
+                                    <select class="form-select" id="reservationTime" name="time">
+                                        <option value="">Select time</option>
+                                        <option>7:00 AM</option>
+                                        <option>8:00 AM</option>
+                                        <option>9:00 AM</option>
+                                        <option>10:00 AM</option>
+                                        <option>11:00 AM</option>
+                                        <option>12:00 PM</option>
+                                        <option>1:00 PM</option>
+                                        <option>2:00 PM</option>
+                                        <option>3:00 PM</option>
+                                        <option>4:00 PM</option>
+                                        <option>5:00 PM</option>
+                                        <option>6:00 PM</option>
+                                        <option>7:00 PM</option>
+                                        <option>8:00 PM</option>
+                                        <option>9:00 PM</option>
+                                        <option>10:00 PM</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" for="guestCount">Guests</label>
+                                    <select class="form-select" id="guestCount" name="guests">
+                                        <option>1 Guest</option>
+                                        <option>2 Guests</option>
+                                        <option>3 Guests</option>
+                                        <option selected>4 Guests</option>
+                                        <option>5–6 Guests</option>
+                                        <option>7–10 Guests</option>
+                                        <option>Private Event (10+)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="occasion">Occasion</label>
+                                    <select class="form-select" id="occasion" name="occasion">
+                                        <option value="">Select occasion</option>
+                                        <option>Regular Visit</option>
+                                        <option>Birthday</option>
+                                        <option>Anniversary</option>
+                                        <option>Business Meeting</option>
+                                        <option>Private Event</option>
+                                        <option>Other</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="guestMessage">Special Requests</label>
+                                <textarea class="form-textarea" id="guestMessage" name="message"
+                                    placeholder="Dietary requirements, seating preferences, or any special arrangements...">
+              </textarea>
+                            </div>
+
+                            <button type="submit" class="btn-primary" id="submitReservation"
+                                style="width:100%;justify-content:center;">
+                                <i class="fa-solid fa-calendar-check" aria-hidden="true"></i>
+                                Send Inquiry
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ================================================
+     MAP SECTION
+     ================================================ -->
+    <div class="map-section" aria-label="Our Location">
+        <div class="map-container">
+            <iframe title="Coffee Lounge Location Map"
+                src="https://www.openstreetmap.org/export/embed.html?bbox=77.5940%2C12.9700%2C77.6040%2C12.9760&layer=mapnik&marker=12.9730%2C77.5990"
+                allowfullscreen loading="lazy" aria-label="Map showing Coffee Lounge location on MG Road, Bangalore">
+            </iframe>
+        </div>
+        <div class="map-overlay-card">
+            <h3>Coffee Lounge</h3>
+            <span class="map-sub">Find Us Here</span>
+            <p>12, Prestige Boulevard<br />MG Road, Bangalore<br />560 001, Karnataka</p>
+            <div style="margin-top:16px;">
+                <a href="https://www.google.com/maps/search/Coffee+Lounge+MG+Road+Bangalore" target="_blank"
+                    rel="noopener noreferrer" class="btn-outline-nav" style="display:inline-block;margin-top:4px;">
+                    <i class="fa-solid fa-diamond-turn-right" aria-hidden="true"></i>&nbsp; Get Directions
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================================
+     FOOTER
+     ================================================ -->
+    <footer role="contentinfo">
+        <div class="footer-main">
+            <div class="container">
+                <div class="footer-grid">
+
+                    <!-- Brand Column -->
+                    <div class="footer-brand">
+                        <div class="footer-logo">
+                            <div class="footer-logo-icon">
+                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path
+                                        d="M2 21h16v-2H2v2zm14-9c1.1 0 2-.9 2-2s-.9-2-2-2h-2V6H4v8c0 2.2 1.8 4 4 4h4c1.8 0 3.3-1.2 3.8-2.8.1.1.1.2.2.3zm0-2h-2V8h2c.6 0 1 .4 1 1s-.4 1-1 1zM6 4h2c.6 0 1-.4 1-1s-.4-1-1-1H6c-.6 0-1 .4-1 1s.4 1 1 1zm4 0h2c.6 0 1-.4 1-1s-.4-1-1-1h-2c-.6 0-1 .4-1 1s.4 1 1 1z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <span class="footer-logo-name">Coffee Lounge</span>
+                                <span class="footer-logo-sub">— Fine Coffee &amp; Lounge —</span>
+                            </div>
+                        </div>
+                        <p class="footer-desc">
+                            A sanctuary for coffee lovers and connoisseurs. Sourcing the world's finest beans, crafting
+                            exceptional brews, and curating unforgettable lounge experiences since 2018.
+                        </p>
+                        <div class="footer-social">
+                            <a href="#" class="social-link" aria-label="Instagram">
+                                <i class="fa-brands fa-instagram" aria-hidden="true"></i>
+                            </a>
+                            <a href="#" class="social-link" aria-label="Facebook">
+                                <i class="fa-brands fa-facebook-f" aria-hidden="true"></i>
+                            </a>
+                            <a href="#" class="social-link" aria-label="Twitter / X">
+                                <i class="fa-brands fa-x-twitter" aria-hidden="true"></i>
+                            </a>
+                            <a href="#" class="social-link" aria-label="YouTube">
+                                <i class="fa-brands fa-youtube" aria-hidden="true"></i>
+                            </a>
+                            <a href="#" class="social-link" aria-label="WhatsApp">
+                                <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Quick Links -->
+                    <div>
+                        <h4 class="footer-col-title">Quick Links</h4>
+                        <ul class="footer-links">
+                            <li><a href="#home">Home</a></li>
+                            <li><a href="#about">About Us</a></li>
+                            <li><a href="#menu">Our Menu</a></li>
+                            <li><a href="#gallery">Gallery</a></li>
+                            <li><a href="#events">Events &amp; Lounge Life</a></li>
+                            <li><a href="#contact">Contact Us</a></li>
+                            <li><a href="#menu">Order Online</a></li>
+                            <li><a href="#contact">Reserve a Table</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Contact Info -->
+                    <div>
+                        <h4 class="footer-col-title">Contact &amp; Hours</h4>
+                        <ul class="footer-links" style="gap: 14px;">
+                            <li>
+                                <a href="tel:+918045678900">
+                                    <i class="fa-solid fa-phone" style="color:var(--gold);width:14px;"
+                                        aria-hidden="true"></i>
+                                    +91 80 4567 8900
+                                </a>
+                            </li>
+                            <li>
+                                <a href="mailto:hello@coffeelounge.in">
+                                    <i class="fa-solid fa-envelope" style="color:var(--gold);width:14px;"
+                                        aria-hidden="true"></i>
+                                    hello@coffeelounge.in
+                                </a>
+                            </li>
+                            <li style="color:var(--text-muted);font-size:0.82rem;line-height:1.6;">
+                                <i class="fa-solid fa-location-dot" style="color:var(--gold);width:14px;"
+                                    aria-hidden="true"></i>
+                                &nbsp;12, Prestige Boulevard,<br />
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MG Road, Bangalore
+                            </li>
+                        </ul>
+                        <div style="margin-top:24px;">
+                            <p class="footer-col-title" style="margin-bottom:10px;">Hours</p>
+                            <p style="font-size:0.78rem;color:var(--text-muted);line-height:1.8;">
+                                Mon–Thu: 7:00 AM – 11:00 PM<br />
+                                Fri–Sat: 7:00 AM – 12:00 AM<br />
+                                Sunday: 8:00 AM – 11:00 PM
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Newsletter -->
+                    <div class="footer-newsletter">
+                        <h4 class="footer-col-title">VIP Club</h4>
+                        <p>Join our exclusive VIP newsletter for seasonal menus, event invitations, early access to
+                            workshops, and members-only offers.</p>
+                        <form id="newsletterForm" novalidate>
+                            <div class="newsletter-form">
+                                <input class="newsletter-input" type="email" id="newsletterEmail" name="email"
+                                    placeholder="Your email address" required
+                                    aria-label="Email address for newsletter" />
+                                <button type="submit" class="newsletter-btn">Join</button>
+                            </div>
+                        </form>
+                        <p class="footer-newsletter-note">No spam. Unsubscribe anytime. We respect your privacy.</p>
+
+                        <div style="margin-top:28px;">
+                            <p class="footer-col-title" style="margin-bottom:10px;">Explore More</p>
+                            <div style="display:flex;flex-direction:column;gap:8px;">
+                                <a href="#" class="footer-extra-link">
+                                    <i class="fa-solid fa-briefcase" style="color:var(--gold);font-size:0.75rem;"
+                                        aria-hidden="true"></i>
+                                    Careers / Join Our Team
+                                </a>
+                                <a href="#" class="footer-extra-link">
+                                    <i class="fa-solid fa-gift" style="color:var(--gold);font-size:0.75rem;"
+                                        aria-hidden="true"></i>
+                                    Gift Cards &amp; Merchandise
+                                </a>
+                                <a href="#" class="footer-extra-link">
+                                    <i class="fa-solid fa-store" style="color:var(--gold);font-size:0.75rem;"
+                                        aria-hidden="true"></i>
+                                    Order Online / Pick-Up
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div><!-- /footer-grid -->
+            </div><!-- /container -->
+        </div><!-- /footer-main -->
+
+        <!-- Footer Bottom Bar -->
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="footer-bottom-inner">
+                    <p class="footer-copyright">
+                        &copy; 2026 <strong>Coffee Lounge</strong> — Fine Coffee &amp; Lounge. All rights reserved.
+                    </p>
+                    <div class="footer-bottom-links">
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Terms of Service</a>
+                        <a href="#">Cookie Policy</a>
+                        <a href="#">Sitemap</a>
+                    </div>
+                    <p class="footer-copyright" style="font-size:0.65rem;opacity:0.6;">
+                        Crafted with ☕ &amp; passion in Sri Lanka
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </footer>
+
+    <!-- ================================================
+     SCRIPTS
+     ================================================ -->
+    <script src="js/main.js" defer></script>
+
+</body>
+
+</html>

@@ -1,0 +1,15 @@
+[
+  {
+    "id": "RES-MSM9QIOZ",
+    "name": "Aarav Sharma",
+    "email": "aarav@example.com",
+    "phone": "+91 98765 43210",
+    "date": "2026-08-15",
+    "time": "19:00",
+    "guests": "4 Guests",
+    "eventType": "Private Event",
+    "message": "Window table please",
+    "createdAt": "2026-08-09T20:42:05.219Z",
+    "status": "Confirmed"
+  }
+]
