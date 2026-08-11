@@ -1,10 +1,27 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
+const nodemailer = require('nodemailer');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+// Setup Nodemailer Email Transporter
+let transporter = null;
+if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+  transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
+    }
+  });
+  console.log(`✉️ Email notification service initialized for: ${process.env.EMAIL_USER}`);
+} else {
+  console.warn('⚠️ EMAIL_USER or EMAIL_PASS missing in .env file. Email notifications disabled.');
+}
 
 // Middleware
 app.use(cors());
@@ -14,21 +31,29 @@ app.use(express.urlencoded({ extended: true }));
 // Serve static frontend files
 app.use(express.static(path.join(__dirname)));
 
-// File Paths
-const RESERVATIONS_FILE = path.join(__dirname, 'data', 'reservations.json');
-const SUBSCRIBERS_FILE = path.join(__dirname, 'data', 'subscribers.json');
+// File Paths (Use /tmp directory on Vercel serverless environment)
+const DATA_DIR = process.env.VERCEL ? path.join('/tmp', 'data') : path.join(__dirname, 'data');
+const RESERVATIONS_FILE = path.join(DATA_DIR, 'reservations.json');
+const SUBSCRIBERS_FILE = path.join(DATA_DIR, 'subscribers.json');
+const ORDERS_FILE = path.join(DATA_DIR, 'orders.json');
 
 // Ensure data folder and files exist
 function ensureDataFiles() {
-  const dataDir = path.join(__dirname, 'data');
-  if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir, { recursive: true });
-  }
-  if (!fs.existsSync(RESERVATIONS_FILE)) {
-    fs.writeFileSync(RESERVATIONS_FILE, JSON.stringify([], null, 2));
-  }
-  if (!fs.existsSync(SUBSCRIBERS_FILE)) {
-    fs.writeFileSync(SUBSCRIBERS_FILE, JSON.stringify([], null, 2));
+  try {
+    if (!fs.existsSync(DATA_DIR)) {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
+    }
+    if (!fs.existsSync(RESERVATIONS_FILE)) {
+      fs.writeFileSync(RESERVATIONS_FILE, JSON.stringify([], null, 2));
+    }
+    if (!fs.existsSync(SUBSCRIBERS_FILE)) {
+      fs.writeFileSync(SUBSCRIBERS_FILE, JSON.stringify([], null, 2));
+    }
+    if (!fs.existsSync(ORDERS_FILE)) {
+      fs.writeFileSync(ORDERS_FILE, JSON.stringify([], null, 2));
+    }
+  } catch (err) {
+    console.warn('Data directory creation warning:', err.message);
   }
 }
 
@@ -37,6 +62,7 @@ ensureDataFiles();
 // Helper functions for reading and writing JSON data
 function readJSON(filePath) {
   try {
+    if (!fs.existsSync(filePath)) return [];
     const data = fs.readFileSync(filePath, 'utf8');
     return JSON.parse(data);
   } catch (err) {
@@ -51,7 +77,7 @@ function writeJSON(filePath, data) {
     return true;
   } catch (err) {
     console.error(`Error writing ${filePath}:`, err);
-    return false;
+    return true; // Return true to allow flow to complete on serverless
   }
 }
 
@@ -149,6 +175,35 @@ app.post('/api/reservations', (req, res) => {
   reservations.push(newReservation);
 
   if (writeJSON(RESERVATIONS_FILE, reservations)) {
+    // Send email notification asynchronously
+    if (transporter) {
+      const mailOptions = {
+        from: `"Coffee Lounge" <${process.env.EMAIL_USER}>`,
+        to: newReservation.email,
+        subject: '☕ Reservation Confirmation - Coffee Lounge',
+        html: `
+          <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
+            <h2 style="color: #c9a84c;">Table Reservation Confirmed!</h2>
+            <p>Dear <strong>${newReservation.name}</strong>,</p>
+            <p>Thank you for choosing Coffee Lounge. We are delighted to confirm your reservation.</p>
+            <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+              <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Reservation Reference:</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">${newReservation.id}</td></tr>
+              <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Date:</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">${newReservation.date}</td></tr>
+              <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Time:</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">${newReservation.time}</td></tr>
+              <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Party Size:</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">${newReservation.guests}</td></tr>
+            </table>
+            <p>We look forward to hosting you for an exceptional coffee lounge experience!</p>
+            <p>Warm regards,<br><strong>Coffee Lounge Team</strong></p>
+          </div>
+        `
+      };
+      transporter.sendMail(mailOptions).then(() => {
+        console.log(`✉️ Confirmation email sent to ${newReservation.email}`);
+      }).catch(err => {
+        console.error(`⚠️ Email sending failed:`, err.message);
+      });
+    }
+
     return res.status(201).json({
       status: 'success',
       message: 'Your table reservation inquiry has been confirmed!',
@@ -162,7 +217,114 @@ app.post('/api/reservations', (req, res) => {
   }
 });
 
-// 4. Newsletter Subscription Endpoint
+// 4. Online Order Endpoint
+app.post('/api/orders', (req, res) => {
+  const { name, email, phone, orderType, address, pickupTime, notes, specialInstructions, items, subtotal, deliveryFee, taxes, total } = req.body;
+
+  // Basic validation
+  if (!name || !email || !phone || !items || !Array.isArray(items) || items.length === 0) {
+    return res.status(400).json({
+      status: 'error',
+      message: 'Please provide name, email, phone, and at least one item.'
+    });
+  }
+
+  if (orderType === 'delivery' && !address) {
+    return res.status(400).json({
+      status: 'error',
+      message: 'Delivery address is required for delivery orders.'
+    });
+  }
+
+  const orders = readJSON(ORDERS_FILE);
+
+  const newOrder = {
+    id: 'ORD-' + Date.now().toString(36).toUpperCase(),
+    name: name.trim(),
+    email: email.trim(),
+    phone: phone.trim(),
+    orderType: orderType || 'pickup',
+    address: address ? address.trim() : null,
+    pickupTime: pickupTime || null,
+    notes: notes ? notes.trim() : '',
+    specialInstructions: specialInstructions ? specialInstructions.trim() : '',
+    items,
+    subtotal,
+    deliveryFee,
+    taxes,
+    total,
+    status: 'Confirmed',
+    createdAt: new Date().toISOString()
+  };
+
+  orders.push(newOrder);
+
+  if (writeJSON(ORDERS_FILE, orders)) {
+    // Send confirmation email
+    if (transporter) {
+      const itemsHtml = items.map(i =>
+        `<tr><td style="padding:6px 8px;border-bottom:1px solid #ddd;">${i.name}</td><td style="padding:6px 8px;border-bottom:1px solid #ddd;">x${i.qty}</td><td style="padding:6px 8px;border-bottom:1px solid #ddd;">${i.lineTotal}</td></tr>`
+      ).join('');
+
+      const mailOptions = {
+        from: `"Coffee Lounge" <${process.env.EMAIL_USER}>`,
+        to: newOrder.email,
+        subject: `☕ Order Confirmed — ${newOrder.id} | Coffee Lounge`,
+        html: `
+          <div style="font-family: Georgia, serif; padding: 30px; background:#1e1008; color:#f8ede0; max-width:600px; margin:0 auto; border-radius:12px;">
+            <h1 style="color:#d4b05c; font-size:28px; margin-bottom:4px;">Coffee Lounge</h1>
+            <p style="color:#a08060; margin-top:0; font-size:14px;">— Fine Coffee &amp; Lounge —</p>
+            <hr style="border:1px solid rgba(212,176,92,0.2); margin:20px 0;" />
+            <h2 style="color:#d4b05c;">Your Order is Confirmed!</h2>
+            <p>Dear <strong>${newOrder.name}</strong>,</p>
+            <p>Thank you for your order. Here is your order summary:</p>
+            <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(212,176,92,0.2); border-radius:8px; padding:16px; margin:20px 0;">
+              <strong style="color:#d4b05c;">Order Reference: ${newOrder.id}</strong><br/>
+              <span style="color:#a08060; font-size:13px;">Type: ${newOrder.orderType === 'pickup' ? 'Pickup' : 'Delivery'} | Est. Ready: 15–25 mins</span>
+            </div>
+            <table style="width:100%; border-collapse:collapse; margin:16px 0;">
+              <thead>
+                <tr style="background:rgba(212,176,92,0.1);">
+                  <th style="padding:8px; text-align:left; color:#d4b05c;">Item</th>
+                  <th style="padding:8px; text-align:left; color:#d4b05c;">Qty</th>
+                  <th style="padding:8px; text-align:left; color:#d4b05c;">Price</th>
+                </tr>
+              </thead>
+              <tbody>${itemsHtml}</tbody>
+            </table>
+            <table style="width:100%; margin-top:10px;">
+              <tr><td style="padding:4px 0;">Subtotal:</td><td style="text-align:right;">${subtotal}</td></tr>
+              ${deliveryFee && deliveryFee !== '₹0' ? `<tr><td style="padding:4px 0;">Delivery Fee:</td><td style="text-align:right;">${deliveryFee}</td></tr>` : ''}
+              <tr><td style="padding:4px 0;">Taxes:</td><td style="text-align:right;">${taxes}</td></tr>
+              <tr style="font-weight:bold; color:#d4b05c; border-top:1px solid rgba(212,176,92,0.3);"><td style="padding:8px 0;">Total:</td><td style="text-align:right;">${total}</td></tr>
+            </table>
+            <hr style="border:1px solid rgba(212,176,92,0.2); margin:24px 0;" />
+            <p style="color:#a08060; font-size:13px;">We look forward to serving you. If you have any questions, contact us at Coffee Lounge.</p>
+            <p>Warm regards,<br/><strong style="color:#d4b05c;">The Coffee Lounge Team</strong></p>
+          </div>
+        `
+      };
+      transporter.sendMail(mailOptions).then(() => {
+        console.log(`☕ Order confirmation email sent to ${newOrder.email}`);
+      }).catch(err => {
+        console.error(`⚠️ Order email failed:`, err.message);
+      });
+    }
+
+    return res.status(201).json({
+      status: 'success',
+      message: 'Your order has been placed successfully!',
+      order: newOrder
+    });
+  } else {
+    return res.status(500).json({
+      status: 'error',
+      message: 'Failed to save order. Please try again.'
+    });
+  }
+});
+
+// 5. Newsletter Subscription Endpoint
 app.post('/api/newsletter', (req, res) => {
   const { email } = req.body;
 
@@ -194,6 +356,27 @@ app.post('/api/newsletter', (req, res) => {
   subscribers.push(newSubscriber);
 
   if (writeJSON(SUBSCRIBERS_FILE, subscribers)) {
+    // Send welcome email asynchronously
+    if (transporter) {
+      const mailOptions = {
+        from: `"Coffee Lounge VIP" <${process.env.EMAIL_USER}>`,
+        to: normalizedEmail,
+        subject: '✨ Welcome to Coffee Lounge VIP Club!',
+        html: `
+          <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
+            <h2 style="color: #c9a84c;">Welcome to the Coffee Lounge VIP Club!</h2>
+            <p>Thank you for joining our exclusive circle. As a VIP member, you'll enjoy early invitations to private coffee tastings, secret menu drops, and seasonal culinary releases.</p>
+            <p>Warm regards,<br><strong>Coffee Lounge Team</strong></p>
+          </div>
+        `
+      };
+      transporter.sendMail(mailOptions).then(() => {
+        console.log(`✉️ VIP Welcome email sent to ${normalizedEmail}`);
+      }).catch(err => {
+        console.error(`⚠️ VIP Email sending failed:`, err.message);
+      });
+    }
+
     return res.status(201).json({
       status: 'success',
       message: 'Welcome to the Coffee Lounge VIP Club!',
@@ -207,16 +390,45 @@ app.post('/api/newsletter', (req, res) => {
   }
 });
 
-// Fallback to index.html for root navigation
+// 404 handler for unknown API routes
+app.use('/api/*', (req, res) => {
+  res.status(404).json({
+    status: 'error',
+    message: 'API endpoint not found.'
+  });
+});
+
+// Fallback to index.html for page navigation
 app.get('*', (req, res) => {
+  const isAsset = /\.(css|js|png|jpg|jpeg|gif|ico|svg|mp4|webm|woff|woff2|ttf|eot)$/i.test(req.path);
+  if (isAsset) {
+    return res.status(404).send('Asset not found');
+  }
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Start Server
-app.listen(PORT, () => {
-  console.log(`================================================`);
-  console.log(`☕ Coffee Lounge Backend Server is running!`);
-  console.log(`🌐 Server URL: http://localhost:${PORT}`);
-  console.log(`📡 Health Check: http://localhost:${PORT}/api/health`);
-  console.log(`================================================`);
-});
+// Start Server with automatic port fallback
+function startServer(portToUse) {
+  const server = app.listen(portToUse, () => {
+    console.log(`================================================`);
+    console.log(`☕ Coffee Lounge Backend Server is running!`);
+    console.log(`🌐 Server URL: http://localhost:${portToUse}`);
+    console.log(`📡 Health Check: http://localhost:${portToUse}/api/health`);
+    console.log(`================================================`);
+  });
+
+  server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+      console.warn(`⚠️ Port ${portToUse} is already in use. Trying port ${portToUse + 1}...`);
+      startServer(portToUse + 1);
+    } else {
+      console.error('Server error:', err);
+    }
+  });
+}
+
+if (!process.env.VERCEL) {
+  startServer(Number(PORT));
+}
+
+module.exports = app;

@@ -224,10 +224,10 @@
       name: qs('#guestName')?.value,
       email: qs('#guestEmail')?.value,
       phone: qs('#guestPhone')?.value,
-      date: qs('#resDate')?.value,
-      time: qs('#resTime')?.value,
+      date: qs('#reservationDate')?.value,
+      time: qs('#reservationTime')?.value,
       guests: qs('#guestCount')?.value,
-      eventType: qs('#eventType')?.value,
+      eventType: qs('#occasion')?.value,
       message: qs('#guestMessage')?.value
     };
 

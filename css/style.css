@@ -1121,18 +1121,18 @@ ul {
   object-fit: cover;
   min-height: 250px;
   transition: transform var(--transition-slow), filter var(--transition-slow);
-  filter: brightness(1.0) saturate(1.05);
+  filter: brightness(1.12) contrast(1.05) saturate(1.1);
 }
 
 .gallery-item:hover img {
-  transform: scale(1.08);
-  filter: brightness(1) saturate(1.1);
+  transform: scale(1.06);
+  filter: brightness(1.18) contrast(1.08) saturate(1.15);
 }
 
 .gallery-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(10, 5, 2, 0.8) 0%, transparent 60%);
+  background: linear-gradient(to top, rgba(15, 8, 4, 0.75) 0%, rgba(15, 8, 4, 0.1) 45%, transparent 75%);
   opacity: 0;
   transition: opacity var(--transition-med);
   display: flex;

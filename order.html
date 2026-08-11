@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="Order online from Coffee Lounge — fine specialty coffee, artisan teas, gourmet pastries and savory bites. Premium delivery & pickup." />
+  <meta name="keywords" content="coffee lounge order online, specialty coffee delivery, artisan cafe order" />
+  <meta property="og:title" content="Order Online — Coffee Lounge" />
+  <meta property="og:description" content="Order our premium coffee, teas, pastries and savory bites online for delivery or pickup." />
+  <title>Order Online — Coffee Lounge</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/order.css" />
+</head>
+
+<body class="order-body">
+
+  <header id="order-navbar" role="banner">
+    <a href="index.html" class="nav-logo" aria-label="Coffee Lounge Home">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M2 21h16v-2H2v2zm14-9c1.1 0 2-.9 2-2s-.9-2-2-2h-2V6H4v8c0 2.2 1.8 4 4 4h4c1.8 0 3.3-1.2 3.8-2.8.1.1.1.2.2.3zm0-2h-2V8h2c.6 0 1 .4 1 1s-.4 1-1 1zM6 4h2c.6 0 1-.4 1-1s-.4-1-1-1H6c-.6 0-1 .4-1 1s.4 1 1 1zm4 0h2c.6 0 1-.4 1-1s-.4-1-1-1h-2c-.6 0-1 .4-1 1s.4 1 1 1z" />
+        </svg>
+      </div>
+      <div class="nav-logo-text">
+        <span class="nav-logo-name">Coffee Lounge</span>
+        <span class="nav-logo-sub">— Fine Coffee &amp; Lounge —</span>
+      </div>
+    </a>
+
+    <nav aria-label="Order Navigation">
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="index.html#menu">Menu</a></li>
+        <li><a href="order.html" class="active">Order Online</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="nav-actions">
+      <button class="cart-nav-btn" id="cartNavBtn" aria-label="Open cart" aria-expanded="false">
+        <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+        <span class="cart-nav-count" id="cartNavCount">0</span>
+      </button>
+      <a href="index.html#contact" class="btn-gold-nav">Reserve a Table</a>
+    </div>
+  </header>
+
+  <!-- ORDER HERO -->
+  <section class="order-hero" aria-label="Order Online Hero">
+    <div class="order-hero-bg" aria-hidden="true"></div>
+    <div class="order-hero-content">
+      <div class="order-hero-eyebrow">
+        <span class="eyebrow-line"></span>
+        <span>Fine Coffee &amp; Lounge</span>
+        <span class="eyebrow-line"></span>
+      </div>
+      <h1 class="order-hero-title">Order <em>Online</em></h1>
+      <p class="order-hero-sub">Curated for pickup or delivery — crafted with the same passion as your in-lounge experience.</p>
+
+      <div class="order-type-toggle" role="group" aria-label="Choose order type">
+        <button class="order-type-btn active" id="btnPickup" data-type="pickup">
+          <i class="fa-solid fa-store" aria-hidden="true"></i>
+          Pickup
+        </button>
+        <button class="order-type-btn" id="btnDelivery" data-type="delivery">
+          <i class="fa-solid fa-motorcycle" aria-hidden="true"></i>
+          Delivery
+        </button>
+      </div>
+
+      <div class="order-info-strip">
+        <div class="order-info-item">
+          <i class="fa-regular fa-clock" aria-hidden="true"></i>
+          <span>Ready in <strong>15-25 min</strong></span>
+        </div>
+        <div class="order-info-sep" aria-hidden="true">.</div>
+        <div class="order-info-item">
+          <i class="fa-solid fa-leaf" aria-hidden="true"></i>
+          <span>Fresh daily ingredients</span>
+        </div>
+        <div class="order-info-sep" aria-hidden="true">.</div>
+        <div class="order-info-item">
+          <i class="fa-solid fa-award" aria-hidden="true"></i>
+          <span>Award-winning recipes</span>
+        </div>
+      </div>
+    </div>
+    <div class="order-hero-scroll" aria-hidden="true">
+      <span>Scroll to Menu</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- STICKY CATEGORY NAV -->
+  <nav class="category-nav" id="categoryNav" aria-label="Menu categories">
+    <div class="category-nav-inner">
+      <button class="cat-btn active" data-cat="all" id="catAll">All Items</button>
+      <button class="cat-btn" data-cat="Specialty Coffee" id="catCoffee">
+        <i class="fa-solid fa-mug-hot" aria-hidden="true"></i> Coffee
+      </button>
+      <button class="cat-btn" data-cat="Artisan Teas &amp; Infusions" id="catTea">
+        <i class="fa-solid fa-leaf" aria-hidden="true"></i> Teas
+      </button>
+      <button class="cat-btn" data-cat="Bakery &amp; Desserts" id="catBakery">
+        <i class="fa-solid fa-cookie-bite" aria-hidden="true"></i> Bakery
+      </button>
+      <button class="cat-btn" data-cat="Savory Bites" id="catSavory">
+        <i class="fa-solid fa-utensils" aria-hidden="true"></i> Savory
+      </button>
+    </div>
+  </nav>
+
+  <!-- MAIN — MENU + CART -->
+  <main class="order-main" id="orderMain">
+    <section class="menu-section" aria-label="Menu items">
+      <div class="menu-loading" id="menuLoading" aria-busy="true" aria-label="Loading menu">
+        <div class="loading-pulse">
+          <div class="loading-shimmer-card"></div>
+          <div class="loading-shimmer-card"></div>
+          <div class="loading-shimmer-card"></div>
+          <div class="loading-shimmer-card"></div>
+          <div class="loading-shimmer-card"></div>
+          <div class="loading-shimmer-card"></div>
+        </div>
+      </div>
+      <div class="menu-content" id="menuContent" aria-live="polite"></div>
+      <div class="menu-empty" id="menuEmpty" hidden>
+        <i class="fa-solid fa-mug-hot" aria-hidden="true"></i>
+        <p>No items found in this category.</p>
+      </div>
+    </section>
+
+    <aside class="cart-sidebar" id="cartSidebar" aria-label="Your cart">
+      <div class="cart-sidebar-header">
+        <h2 class="cart-title">
+          <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+          Your Order
+        </h2>
+        <span class="cart-items-label" id="cartItemsLabel">0 items</span>
+      </div>
+
+      <div class="cart-order-type" id="cartOrderType">
+        <i class="fa-solid fa-store" aria-hidden="true" id="cartOrderTypeIcon"></i>
+        <span id="cartOrderTypeText">Pickup</span>
+        <button class="cart-change-type" id="cartChangeType">Change</button>
+      </div>
+
+      <div class="cart-items-container" id="cartItemsContainer">
+        <div class="cart-empty" id="cartEmpty">
+          <div class="cart-empty-icon">
+            <i class="fa-solid fa-mug-saucer" aria-hidden="true"></i>
+          </div>
+          <p class="cart-empty-title">Your cup is empty</p>
+          <p class="cart-empty-sub">Add items from the menu to get started.</p>
+        </div>
+        <ul class="cart-items-list" id="cartItemsList" aria-label="Cart items"></ul>
+      </div>
+
+      <div class="cart-instructions" id="cartInstructions" hidden>
+        <label for="specialInstructions" class="instructions-label">
+          <i class="fa-regular fa-pen-to-square" aria-hidden="true"></i>
+          Special Instructions
+        </label>
+        <textarea id="specialInstructions" class="instructions-input" placeholder="Allergy notes, preferences, customizations..." rows="2" maxlength="250"></textarea>
+      </div>
+
+      <div class="cart-summary" id="cartSummary" hidden>
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span id="cartSubtotal">₹0</span>
+        </div>
+        <div class="summary-row" id="deliveryFeeRow" hidden>
+          <span>Delivery Fee</span>
+          <span id="deliveryFee">₹60</span>
+        </div>
+        <div class="summary-row summary-taxes">
+          <span>Taxes (5%)</span>
+          <span id="cartTaxes">₹0</span>
+        </div>
+        <div class="summary-divider" aria-hidden="true"></div>
+        <div class="summary-row summary-total">
+          <span>Total</span>
+          <span id="cartTotal">₹0</span>
+        </div>
+      </div>
+
+      <button class="btn-checkout" id="btnCheckout" disabled aria-disabled="true">
+        <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+        Proceed to Checkout
+      </button>
+
+      <div class="cart-trust">
+        <div class="trust-badge">
+          <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+          <span>Secure Checkout</span>
+        </div>
+        <div class="trust-badge">
+          <i class="fa-solid fa-fire-flame-curved" aria-hidden="true"></i>
+          <span>Freshly Prepared</span>
+        </div>
+        <div class="trust-badge">
+          <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
+          <span>Satisfaction Guarantee</span>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- FLOATING CART (mobile) -->
+  <button class="float-cart-btn" id="floatCartBtn" aria-label="View cart" hidden>
+    <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+    <span class="float-cart-count" id="floatCartCount">0</span>
+    <span class="float-cart-total" id="floatCartTotal">₹0</span>
+  </button>
+
+  <!-- MOBILE CART DRAWER -->
+  <div class="cart-drawer-overlay" id="cartDrawerOverlay" aria-hidden="true"></div>
+  <div class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-label="Your cart" aria-hidden="true">
+    <div class="cart-drawer-header">
+      <h2 class="cart-title">
+        <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+        Your Order
+      </h2>
+      <button class="cart-drawer-close" id="cartDrawerClose" aria-label="Close cart">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="cart-drawer-body" id="cartDrawerBody"></div>
+  </div>
+
+  <!-- CHECKOUT MODAL -->
+  <div class="modal-overlay" id="checkoutOverlay" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle" aria-hidden="true">
+    <div class="checkout-modal" id="checkoutModal">
+      <button class="modal-close" id="checkoutClose" aria-label="Close checkout">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+
+      <div class="checkout-steps" aria-label="Checkout steps">
+        <div class="checkout-step-indicator active" id="step1Indicator" data-step="1">
+          <div class="step-num">1</div>
+          <span>Details</span>
+        </div>
+        <div class="step-line" aria-hidden="true"></div>
+        <div class="checkout-step-indicator" id="step2Indicator" data-step="2">
+          <div class="step-num">2</div>
+          <span>Review</span>
+        </div>
+        <div class="step-line" aria-hidden="true"></div>
+        <div class="checkout-step-indicator" id="step3Indicator" data-step="3">
+          <div class="step-num">3</div>
+          <span>Confirm</span>
+        </div>
+      </div>
+
+      <!-- Step 1 -->
+      <div class="checkout-form-step" id="checkoutStep1">
+        <h2 id="checkoutTitle" class="modal-heading">Your Details</h2>
+        <p class="modal-sub">We will send your order confirmation here.</p>
+
+        <form class="checkout-form" id="checkoutForm" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="orderName">Full Name <span class="required">*</span></label>
+              <div class="input-wrap">
+                <i class="fa-regular fa-user" aria-hidden="true"></i>
+                <input type="text" id="orderName" name="name" placeholder="Your name" required autocomplete="name" />
+              </div>
+              <span class="field-error" id="nameError" role="alert"></span>
+            </div>
+            <div class="form-group">
+              <label for="orderPhone">Phone <span class="required">*</span></label>
+              <div class="input-wrap">
+                <i class="fa-solid fa-phone" aria-hidden="true"></i>
+                <input type="tel" id="orderPhone" name="phone" placeholder="+91 98765 43210" required autocomplete="tel" />
+              </div>
+              <span class="field-error" id="phoneError" role="alert"></span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="orderEmail">Email <span class="required">*</span></label>
+            <div class="input-wrap">
+              <i class="fa-regular fa-envelope" aria-hidden="true"></i>
+              <input type="email" id="orderEmail" name="email" placeholder="you@example.com" required autocomplete="email" />
+            </div>
+            <span class="field-error" id="emailError" role="alert"></span>
+          </div>
+
+          <div class="form-group" id="addressGroup" hidden>
+            <label for="orderAddress">Delivery Address <span class="required">*</span></label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+              <input type="text" id="orderAddress" name="address" placeholder="Full delivery address" autocomplete="street-address" />
+            </div>
+            <span class="field-error" id="addressError" role="alert"></span>
+          </div>
+
+          <div class="form-group" id="pickupTimeGroup">
+            <label for="orderPickupTime">Preferred Pickup Time</label>
+            <div class="input-wrap">
+              <i class="fa-regular fa-clock" aria-hidden="true"></i>
+              <input type="time" id="orderPickupTime" name="pickupTime" min="08:00" max="21:00" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="orderNotes">Special Requests</label>
+            <textarea id="orderNotes" name="notes" class="form-textarea" placeholder="Customizations, allergies, extra napkins..." rows="3" maxlength="300"></textarea>
+          </div>
+        </form>
+
+        <div class="modal-actions">
+          <button class="btn-modal-secondary" id="cancelCheckout">Cancel</button>
+          <button class="btn-modal-primary" id="nextToReview">
+            Review Order
+            <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="checkout-form-step" id="checkoutStep2" hidden>
+        <h2 class="modal-heading">Review Your Order</h2>
+        <p class="modal-sub">Everything looks right? Confirm below.</p>
+        <div class="review-customer-info" id="reviewCustomerInfo"></div>
+        <div class="review-items-list" id="reviewItemsList" aria-label="Order items to review"></div>
+        <div class="review-totals" id="reviewTotals"></div>
+        <div class="modal-actions">
+          <button class="btn-modal-secondary" id="backToDetails">
+            <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+            Back
+          </button>
+          <button class="btn-modal-primary btn-place-order" id="placeOrderBtn">
+            <i class="fa-solid fa-check" aria-hidden="true"></i>
+            Place Order
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="checkout-form-step" id="checkoutStep3" hidden>
+        <div class="confirmation-content">
+          <div class="confirmation-icon-wrap">
+            <div class="confirmation-ring"></div>
+            <div class="confirmation-icon">
+              <i class="fa-solid fa-check" aria-hidden="true"></i>
+            </div>
+          </div>
+          <h2 class="modal-heading">Order Placed!</h2>
+          <p class="modal-sub">We will send a confirmation to your email shortly.</p>
+
+          <div class="order-ref-box">
+            <span class="ref-label">Order Reference</span>
+            <span class="ref-number" id="orderRefNumber">ORD-XXXXXX</span>
+          </div>
+
+          <div class="confirmation-details" id="confirmationDetails"></div>
+
+          <div class="confirmation-actions">
+            <button class="btn-modal-primary" id="backToMenu">
+              <i class="fa-solid fa-mug-hot" aria-hidden="true"></i>
+              Order More
+            </button>
+            <a href="index.html" class="btn-modal-secondary">Back to Home</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- FOOTER -->
+  <footer class="order-footer">
+    <div class="order-footer-inner">
+      <div class="footer-brand">
+        <svg class="footer-logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M2 21h16v-2H2v2zm14-9c1.1 0 2-.9 2-2s-.9-2-2-2h-2V6H4v8c0 2.2 1.8 4 4 4h4c1.8 0 3.3-1.2 3.8-2.8.1.1.1.2.2.3zm0-2h-2V8h2c.6 0 1 .4 1 1s-.4 1-1 1zM6 4h2c.6 0 1-.4 1-1s-.4-1-1-1H6c-.6 0-1 .4-1 1s.4 1 1 1zm4 0h2c.6 0 1-.4 1-1s-.4-1-1-1h-2c-.6 0-1 .4-1 1s.4 1 1 1z" />
+        </svg>
+        <span>Coffee Lounge</span>
+      </div>
+      <p class="footer-copy">&copy; 2026 Coffee Lounge &middot; Fine Coffee &amp; Lounge &middot; All rights reserved.</p>
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <span aria-hidden="true">&middot;</span>
+        <a href="index.html#menu">Full Menu</a>
+        <span aria-hidden="true">&middot;</span>
+        <a href="index.html#contact">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/order.js"></script>
+</body>
+
+</html>
