@@ -14,13 +14,14 @@ try {
   console.warn('⚠️ Mongoose module load warning:', e.message);
 }
 
-const dns = require('dns');
-
-// Fix for Windows DNS resolution for MongoDB Atlas SRV connection strings
-try {
-  dns.setServers(['8.8.8.8', '1.1.1.1']);
-} catch (e) {
-  console.warn('DNS server configuration warning:', e.message);
+// Fix for Windows DNS resolution for MongoDB Atlas SRV connection strings in local dev
+if (process.platform === 'win32' && !process.env.VERCEL) {
+  try {
+    const dns = require('dns');
+    dns.setServers(['8.8.8.8', '1.1.1.1']);
+  } catch (e) {
+    console.warn('DNS server configuration warning:', e.message);
+  }
 }
 
 const app = express();
@@ -55,14 +56,31 @@ let Reservation = null;
 let Order = null;
 let Subscriber = null;
 
-if (mongoose && MONGO_URI) {
-  mongoose.connect(MONGO_URI)
-    .then(() => {
+let isConnecting = false;
+async function ensureDbConnected() {
+  if (!mongoose || !MONGO_URI) return false;
+  if (mongoose.connection.readyState === 1) return true;
+
+  try {
+    if (!isConnecting) {
+      isConnecting = true;
+      await mongoose.connect(MONGO_URI, {
+        serverSelectionTimeoutMS: 5000,
+        connectTimeoutMS: 5000
+      });
+      isConnecting = false;
       console.log('🍃 Connected to MongoDB Atlas (CoffeeLoungeDB) successfully!');
-    })
-    .catch(err => {
-      console.error('❌ MongoDB Atlas Connection Error:', err.message);
-    });
+    }
+    return mongoose.connection.readyState === 1;
+  } catch (err) {
+    isConnecting = false;
+    console.error('❌ MongoDB Atlas Connection Error:', err.message);
+    return false;
+  }
+}
+
+if (mongoose && MONGO_URI) {
+  ensureDbConnected();
 
   // 1. Reservation Schema & Model
   const reservationSchema = new mongoose.Schema({
@@ -261,9 +279,12 @@ app.post('/api/reservations', async (req, res) => {
   try {
     // Save directly to MongoDB Atlas
     try {
-      const newDoc = new Reservation(reservationData);
-      await newDoc.save();
-      console.log(`🍃 Saved reservation ${reservationData.id} to MongoDB Atlas!`);
+      await ensureDbConnected();
+      if (Reservation && mongoose && mongoose.connection.readyState === 1) {
+        const newDoc = new Reservation(reservationData);
+        await newDoc.save();
+        console.log(`🍃 Saved reservation ${reservationData.id} to MongoDB Atlas!`);
+      }
     } catch (dbErr) {
       console.error(`❌ MongoDB Atlas Reservation Save Error:`, dbErr.message);
     }
@@ -320,8 +341,12 @@ app.post('/api/reservations', async (req, res) => {
 // GET Reservations
 app.get('/api/reservations', async (req, res) => {
   try {
-    const data = await Reservation.find().sort({ createdAt: -1 });
-    return res.json({ status: 'success', data });
+    await ensureDbConnected();
+    if (Reservation && mongoose && mongoose.connection.readyState === 1) {
+      const data = await Reservation.find().sort({ createdAt: -1 });
+      return res.json({ status: 'success', data });
+    }
+    throw new Error('MongoDB not connected');
   } catch (err) {
     const fallbackData = readJSON(RESERVATIONS_FILE);
     return res.json({ status: 'success', data: fallbackData });
@@ -369,9 +394,12 @@ app.post('/api/orders', async (req, res) => {
   try {
     // Save directly to MongoDB Atlas
     try {
-      const newDoc = new Order(orderData);
-      await newDoc.save();
-      console.log(`🍃 Saved order ${orderData.id} to MongoDB Atlas!`);
+      await ensureDbConnected();
+      if (Order && mongoose && mongoose.connection.readyState === 1) {
+        const newDoc = new Order(orderData);
+        await newDoc.save();
+        console.log(`🍃 Saved order ${orderData.id} to MongoDB Atlas!`);
+      }
     } catch (dbErr) {
       console.error(`❌ MongoDB Atlas Order Save Error:`, dbErr.message);
     }
@@ -450,8 +478,12 @@ app.post('/api/orders', async (req, res) => {
 // GET Orders
 app.get('/api/orders', async (req, res) => {
   try {
-    const data = await Order.find().sort({ createdAt: -1 });
-    return res.json({ status: 'success', data });
+    await ensureDbConnected();
+    if (Order && mongoose && mongoose.connection.readyState === 1) {
+      const data = await Order.find().sort({ createdAt: -1 });
+      return res.json({ status: 'success', data });
+    }
+    throw new Error('MongoDB not connected');
   } catch (err) {
     const fallbackData = readJSON(ORDERS_FILE);
     return res.json({ status: 'success', data: fallbackData });
@@ -480,16 +512,19 @@ app.post('/api/newsletter', async (req, res) => {
 
     // Save directly to MongoDB Atlas
     try {
-      const existingDoc = await Subscriber.findOne({ email: normalizedEmail });
-      if (existingDoc) {
-        return res.status(200).json({
-          status: 'success',
-          message: 'You are already subscribed to our VIP Newsletter!'
-        });
+      await ensureDbConnected();
+      if (Subscriber && mongoose && mongoose.connection.readyState === 1) {
+        const existingDoc = await Subscriber.findOne({ email: normalizedEmail });
+        if (existingDoc) {
+          return res.status(200).json({
+            status: 'success',
+            message: 'You are already subscribed to our VIP Newsletter!'
+          });
+        }
+        const newDoc = new Subscriber(subscriberData);
+        await newDoc.save();
+        console.log(`🍃 Saved subscriber ${subscriberData.email} to MongoDB Atlas!`);
       }
-      const newDoc = new Subscriber(subscriberData);
-      await newDoc.save();
-      console.log(`🍃 Saved subscriber ${subscriberData.email} to MongoDB Atlas!`);
     } catch (dbErr) {
       console.error(`❌ MongoDB Atlas Subscriber Save Error:`, dbErr.message);
     }
@@ -541,8 +576,12 @@ app.post('/api/newsletter', async (req, res) => {
 // GET Subscribers
 app.get('/api/newsletter', async (req, res) => {
   try {
-    const data = await Subscriber.find().sort({ subscribedAt: -1 });
-    return res.json({ status: 'success', data });
+    await ensureDbConnected();
+    if (Subscriber && mongoose && mongoose.connection.readyState === 1) {
+      const data = await Subscriber.find().sort({ subscribedAt: -1 });
+      return res.json({ status: 'success', data });
+    }
+    throw new Error('MongoDB not connected');
   } catch (err) {
     const fallbackData = readJSON(SUBSCRIBERS_FILE);
     return res.json({ status: 'success', data: fallbackData });
