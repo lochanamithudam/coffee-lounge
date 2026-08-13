@@ -1,9 +1,21 @@
+if (!globalThis.crypto) {
+  globalThis.crypto = require('crypto');
+}
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 const nodemailer = require('nodemailer');
+const mongoose = require('mongoose');
+const dns = require('dns');
+
+// Fix for Windows DNS resolution for MongoDB Atlas SRV connection strings
+try {
+  dns.setServers(['8.8.8.8', '1.1.1.1']);
+} catch (e) {
+  console.warn('DNS server configuration warning:', e.message);
+}
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -18,10 +30,80 @@ if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
       pass: process.env.EMAIL_PASS
     }
   });
-  console.log(`✉️ Email notification service initialized for: ${process.env.EMAIL_USER}`);
+  transporter.verify((error) => {
+    if (error) {
+      console.error('❌ Nodemailer Verification Error:', error.message);
+    } else {
+      console.log(`✉️ Email notification service ready for: ${process.env.EMAIL_USER}`);
+    }
+  });
 } else {
   console.warn('⚠️ EMAIL_USER or EMAIL_PASS missing in .env file. Email notifications disabled.');
 }
+
+// -------------------------------------------------------------
+// MONGODB ATLAS CONNECTION & SCHEMAS
+// -------------------------------------------------------------
+const MONGO_URI = process.env.MONGO_URI;
+if (MONGO_URI) {
+  mongoose.connect(MONGO_URI)
+    .then(() => {
+      console.log('🍃 Connected to MongoDB Atlas (CoffeeLoungeDB) successfully!');
+    })
+    .catch(err => {
+      console.error('❌ MongoDB Atlas Connection Error:', err.message);
+    });
+} else {
+  console.warn('⚠️ MONGO_URI missing in .env file.');
+}
+
+// 1. Reservation Schema & Model
+const reservationSchema = new mongoose.Schema({
+  id: { type: String, required: true },
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  phone: { type: String, required: true },
+  date: { type: String, required: true },
+  time: { type: String, required: true },
+  guests: { type: String, default: '2 Guests' },
+  eventType: { type: String, default: 'Casual Dining' },
+  message: { type: String, default: '' },
+  createdAt: { type: Date, default: Date.now },
+  status: { type: String, default: 'Confirmed' }
+}, { collection: 'Reservations' });
+
+const Reservation = mongoose.model('Reservation', reservationSchema);
+
+// 2. Order Schema & Model
+const orderSchema = new mongoose.Schema({
+  id: { type: String, required: true },
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  phone: { type: String, required: true },
+  orderType: { type: String, default: 'pickup' },
+  address: { type: String, default: null },
+  pickupTime: { type: String, default: null },
+  notes: { type: String, default: '' },
+  specialInstructions: { type: String, default: '' },
+  items: { type: Array, required: true },
+  subtotal: String,
+  deliveryFee: String,
+  taxes: String,
+  total: String,
+  status: { type: String, default: 'Confirmed' },
+  createdAt: { type: Date, default: Date.now }
+}, { collection: 'Orders' });
+
+const Order = mongoose.model('Order', orderSchema);
+
+// 3. Subscriber Schema & Model
+const subscriberSchema = new mongoose.Schema({
+  id: { type: String, required: true },
+  email: { type: String, required: true, lowercase: true },
+  subscribedAt: { type: Date, default: Date.now }
+}, { collection: 'Subscribers' });
+
+const Subscriber = mongoose.model('Subscriber', subscriberSchema);
 
 // Middleware
 app.use(cors());
@@ -31,13 +113,12 @@ app.use(express.urlencoded({ extended: true }));
 // Serve static frontend files
 app.use(express.static(path.join(__dirname)));
 
-// File Paths (Use /tmp directory on Vercel serverless environment)
+// Local File Fallback Paths
 const DATA_DIR = process.env.VERCEL ? path.join('/tmp', 'data') : path.join(__dirname, 'data');
 const RESERVATIONS_FILE = path.join(DATA_DIR, 'reservations.json');
 const SUBSCRIBERS_FILE = path.join(DATA_DIR, 'subscribers.json');
 const ORDERS_FILE = path.join(DATA_DIR, 'orders.json');
 
-// Ensure data folder and files exist
 function ensureDataFiles() {
   try {
     if (!fs.existsSync(DATA_DIR)) {
@@ -59,7 +140,6 @@ function ensureDataFiles() {
 
 ensureDataFiles();
 
-// Helper functions for reading and writing JSON data
 function readJSON(filePath) {
   try {
     if (!fs.existsSync(filePath)) return [];
@@ -77,7 +157,7 @@ function writeJSON(filePath, data) {
     return true;
   } catch (err) {
     console.error(`Error writing ${filePath}:`, err);
-    return true; // Return true to allow flow to complete on serverless
+    return true;
   }
 }
 
@@ -90,6 +170,7 @@ app.get('/api/health', (req, res) => {
   res.json({
     status: 'success',
     message: 'Coffee Lounge API Backend is active and operational.',
+    database: mongoose.connection.readyState === 1 ? 'MongoDB Atlas (Connected)' : 'Local JSON Storage',
     timestamp: new Date().toISOString()
   });
 });
@@ -145,7 +226,7 @@ app.get('/api/menu', (req, res) => {
 });
 
 // 3. Table Reservation Endpoint
-app.post('/api/reservations', (req, res) => {
+app.post('/api/reservations', async (req, res) => {
   const { name, email, phone, date, time, guests, eventType, message } = req.body;
 
   // Validation
@@ -156,9 +237,7 @@ app.post('/api/reservations', (req, res) => {
     });
   }
 
-  const reservations = readJSON(RESERVATIONS_FILE);
-
-  const newReservation = {
+  const reservationData = {
     id: 'RES-' + Date.now().toString(36).toUpperCase(),
     name: name.trim(),
     email: email.trim(),
@@ -168,57 +247,82 @@ app.post('/api/reservations', (req, res) => {
     guests: guests || '2 Guests',
     eventType: eventType || 'Casual Dining',
     message: message ? message.trim() : '',
-    createdAt: new Date().toISOString(),
+    createdAt: new Date(),
     status: 'Confirmed'
   };
 
-  reservations.push(newReservation);
+  try {
+    // Save directly to MongoDB Atlas
+    try {
+      const newDoc = new Reservation(reservationData);
+      await newDoc.save();
+      console.log(`🍃 Saved reservation ${reservationData.id} to MongoDB Atlas!`);
+    } catch (dbErr) {
+      console.error(`❌ MongoDB Atlas Reservation Save Error:`, dbErr.message);
+    }
 
-  if (writeJSON(RESERVATIONS_FILE, reservations)) {
-    // Send email notification asynchronously
+    // Save to local JSON fallback
+    const reservations = readJSON(RESERVATIONS_FILE);
+    reservations.push(reservationData);
+    writeJSON(RESERVATIONS_FILE, reservations);
+
+    // Send confirmation email asynchronously via Nodemailer
     if (transporter) {
       const mailOptions = {
         from: `"Coffee Lounge" <${process.env.EMAIL_USER}>`,
-        to: newReservation.email,
+        to: reservationData.email,
         subject: '☕ Reservation Confirmation - Coffee Lounge',
         html: `
           <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
             <h2 style="color: #c9a84c;">Table Reservation Confirmed!</h2>
-            <p>Dear <strong>${newReservation.name}</strong>,</p>
+            <p>Dear <strong>${reservationData.name}</strong>,</p>
             <p>Thank you for choosing Coffee Lounge. We are delighted to confirm your reservation.</p>
             <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
-              <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Reservation Reference:</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">${newReservation.id}</td></tr>
-              <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Date:</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">${newReservation.date}</td></tr>
-              <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Time:</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">${newReservation.time}</td></tr>
-              <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Party Size:</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">${newReservation.guests}</td></tr>
+              <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Reservation Reference:</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">${reservationData.id}</td></tr>
+              <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Date:</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">${reservationData.date}</td></tr>
+              <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Time:</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">${reservationData.time}</td></tr>
+              <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Party Size:</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">${reservationData.guests}</td></tr>
             </table>
             <p>We look forward to hosting you for an exceptional coffee lounge experience!</p>
             <p>Warm regards,<br><strong>Coffee Lounge Team</strong></p>
           </div>
         `
       };
-      transporter.sendMail(mailOptions).then(() => {
-        console.log(`✉️ Confirmation email sent to ${newReservation.email}`);
-      }).catch(err => {
-        console.error(`⚠️ Email sending failed:`, err.message);
-      });
+      try {
+        await transporter.sendMail(mailOptions);
+        console.log(`✉️ Confirmation email sent to ${reservationData.email}`);
+      } catch (mailErr) {
+        console.error(`⚠️ Email sending failed to ${reservationData.email}:`, mailErr.message);
+      }
     }
 
     return res.status(201).json({
       status: 'success',
       message: 'Your table reservation inquiry has been confirmed!',
-      reservation: newReservation
+      reservation: reservationData
     });
-  } else {
+  } catch (err) {
+    console.error('Reservation error:', err);
     return res.status(500).json({
       status: 'error',
-      message: 'Failed to save reservation. Please try again.'
+      message: 'Failed to process reservation. Please try again.'
     });
   }
 });
 
+// GET Reservations
+app.get('/api/reservations', async (req, res) => {
+  try {
+    const data = await Reservation.find().sort({ createdAt: -1 });
+    return res.json({ status: 'success', data });
+  } catch (err) {
+    const fallbackData = readJSON(RESERVATIONS_FILE);
+    return res.json({ status: 'success', data: fallbackData });
+  }
+});
+
 // 4. Online Order Endpoint
-app.post('/api/orders', (req, res) => {
+app.post('/api/orders', async (req, res) => {
   const { name, email, phone, orderType, address, pickupTime, notes, specialInstructions, items, subtotal, deliveryFee, taxes, total } = req.body;
 
   // Basic validation
@@ -236,9 +340,7 @@ app.post('/api/orders', (req, res) => {
     });
   }
 
-  const orders = readJSON(ORDERS_FILE);
-
-  const newOrder = {
+  const orderData = {
     id: 'ORD-' + Date.now().toString(36).toUpperCase(),
     name: name.trim(),
     email: email.trim(),
@@ -254,12 +356,24 @@ app.post('/api/orders', (req, res) => {
     taxes,
     total,
     status: 'Confirmed',
-    createdAt: new Date().toISOString()
+    createdAt: new Date()
   };
 
-  orders.push(newOrder);
+  try {
+    // Save directly to MongoDB Atlas
+    try {
+      const newDoc = new Order(orderData);
+      await newDoc.save();
+      console.log(`🍃 Saved order ${orderData.id} to MongoDB Atlas!`);
+    } catch (dbErr) {
+      console.error(`❌ MongoDB Atlas Order Save Error:`, dbErr.message);
+    }
 
-  if (writeJSON(ORDERS_FILE, orders)) {
+    // Save to local JSON fallback
+    const orders = readJSON(ORDERS_FILE);
+    orders.push(orderData);
+    writeJSON(ORDERS_FILE, orders);
+
     // Send confirmation email
     if (transporter) {
       const itemsHtml = items.map(i =>
@@ -268,19 +382,19 @@ app.post('/api/orders', (req, res) => {
 
       const mailOptions = {
         from: `"Coffee Lounge" <${process.env.EMAIL_USER}>`,
-        to: newOrder.email,
-        subject: `☕ Order Confirmed — ${newOrder.id} | Coffee Lounge`,
+        to: orderData.email,
+        subject: `☕ Order Confirmed — ${orderData.id} | Coffee Lounge`,
         html: `
           <div style="font-family: Georgia, serif; padding: 30px; background:#1e1008; color:#f8ede0; max-width:600px; margin:0 auto; border-radius:12px;">
             <h1 style="color:#d4b05c; font-size:28px; margin-bottom:4px;">Coffee Lounge</h1>
             <p style="color:#a08060; margin-top:0; font-size:14px;">— Fine Coffee &amp; Lounge —</p>
             <hr style="border:1px solid rgba(212,176,92,0.2); margin:20px 0;" />
             <h2 style="color:#d4b05c;">Your Order is Confirmed!</h2>
-            <p>Dear <strong>${newOrder.name}</strong>,</p>
+            <p>Dear <strong>${orderData.name}</strong>,</p>
             <p>Thank you for your order. Here is your order summary:</p>
             <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(212,176,92,0.2); border-radius:8px; padding:16px; margin:20px 0;">
-              <strong style="color:#d4b05c;">Order Reference: ${newOrder.id}</strong><br/>
-              <span style="color:#a08060; font-size:13px;">Type: ${newOrder.orderType === 'pickup' ? 'Pickup' : 'Delivery'} | Est. Ready: 15–25 mins</span>
+              <strong style="color:#d4b05c;">Order Reference: ${orderData.id}</strong><br/>
+              <span style="color:#a08060; font-size:13px;">Type: ${orderData.orderType === 'pickup' ? 'Pickup' : 'Delivery'} | Est. Ready: 15–25 mins</span>
             </div>
             <table style="width:100%; border-collapse:collapse; margin:16px 0;">
               <thead>
@@ -304,19 +418,21 @@ app.post('/api/orders', (req, res) => {
           </div>
         `
       };
-      transporter.sendMail(mailOptions).then(() => {
-        console.log(`☕ Order confirmation email sent to ${newOrder.email}`);
-      }).catch(err => {
-        console.error(`⚠️ Order email failed:`, err.message);
-      });
+      try {
+        await transporter.sendMail(mailOptions);
+        console.log(`☕ Order confirmation email sent to ${orderData.email}`);
+      } catch (mailErr) {
+        console.error(`⚠️ Order email failed for ${orderData.email}:`, mailErr.message);
+      }
     }
 
     return res.status(201).json({
       status: 'success',
       message: 'Your order has been placed successfully!',
-      order: newOrder
+      order: orderData
     });
-  } else {
+  } catch (err) {
+    console.error('Order saving error:', err);
     return res.status(500).json({
       status: 'error',
       message: 'Failed to save order. Please try again.'
@@ -324,8 +440,19 @@ app.post('/api/orders', (req, res) => {
   }
 });
 
+// GET Orders
+app.get('/api/orders', async (req, res) => {
+  try {
+    const data = await Order.find().sort({ createdAt: -1 });
+    return res.json({ status: 'success', data });
+  } catch (err) {
+    const fallbackData = readJSON(ORDERS_FILE);
+    return res.json({ status: 'success', data: fallbackData });
+  }
+});
+
 // 5. Newsletter Subscription Endpoint
-app.post('/api/newsletter', (req, res) => {
+app.post('/api/newsletter', async (req, res) => {
   const { email } = req.body;
 
   if (!email || !email.includes('@')) {
@@ -335,27 +462,39 @@ app.post('/api/newsletter', (req, res) => {
     });
   }
 
-  const subscribers = readJSON(SUBSCRIBERS_FILE);
   const normalizedEmail = email.trim().toLowerCase();
 
-  // Check if already subscribed
-  const existing = subscribers.find(sub => sub.email === normalizedEmail);
-  if (existing) {
-    return res.status(200).json({
-      status: 'success',
-      message: 'You are already subscribed to our VIP Newsletter!'
-    });
-  }
+  try {
+    const subscriberData = {
+      id: 'SUB-' + Date.now().toString(36).toUpperCase(),
+      email: normalizedEmail,
+      subscribedAt: new Date()
+    };
 
-  const newSubscriber = {
-    id: 'SUB-' + Date.now().toString(36).toUpperCase(),
-    email: normalizedEmail,
-    subscribedAt: new Date().toISOString()
-  };
+    // Save directly to MongoDB Atlas
+    try {
+      const existingDoc = await Subscriber.findOne({ email: normalizedEmail });
+      if (existingDoc) {
+        return res.status(200).json({
+          status: 'success',
+          message: 'You are already subscribed to our VIP Newsletter!'
+        });
+      }
+      const newDoc = new Subscriber(subscriberData);
+      await newDoc.save();
+      console.log(`🍃 Saved subscriber ${subscriberData.email} to MongoDB Atlas!`);
+    } catch (dbErr) {
+      console.error(`❌ MongoDB Atlas Subscriber Save Error:`, dbErr.message);
+    }
 
-  subscribers.push(newSubscriber);
+    // Save to local JSON fallback
+    const subscribers = readJSON(SUBSCRIBERS_FILE);
+    const existing = subscribers.find(sub => sub.email === normalizedEmail);
+    if (!existing) {
+      subscribers.push(subscriberData);
+      writeJSON(SUBSCRIBERS_FILE, subscribers);
+    }
 
-  if (writeJSON(SUBSCRIBERS_FILE, subscribers)) {
     // Send welcome email asynchronously
     if (transporter) {
       const mailOptions = {
@@ -370,23 +509,36 @@ app.post('/api/newsletter', (req, res) => {
           </div>
         `
       };
-      transporter.sendMail(mailOptions).then(() => {
+      try {
+        await transporter.sendMail(mailOptions);
         console.log(`✉️ VIP Welcome email sent to ${normalizedEmail}`);
-      }).catch(err => {
-        console.error(`⚠️ VIP Email sending failed:`, err.message);
-      });
+      } catch (mailErr) {
+        console.error(`⚠️ VIP Email sending failed for ${normalizedEmail}:`, mailErr.message);
+      }
     }
 
     return res.status(201).json({
       status: 'success',
       message: 'Welcome to the Coffee Lounge VIP Club!',
-      subscriber: newSubscriber
+      subscriber: subscriberData
     });
-  } else {
+  } catch (err) {
+    console.error('Newsletter error:', err);
     return res.status(500).json({
       status: 'error',
       message: 'Server error while processing subscription. Please try again.'
     });
+  }
+});
+
+// GET Subscribers
+app.get('/api/newsletter', async (req, res) => {
+  try {
+    const data = await Subscriber.find().sort({ subscribedAt: -1 });
+    return res.json({ status: 'success', data });
+  } catch (err) {
+    const fallbackData = readJSON(SUBSCRIBERS_FILE);
+    return res.json({ status: 'success', data: fallbackData });
   }
 });
 

@@ -143,10 +143,24 @@ el.cartChangeType.addEventListener('click', () => {
   setOrderType(state.orderType === 'pickup' ? 'delivery' : 'pickup');
 });
 
+// ─── API BASE URL HELPER ──────────────────────────────────────────────────────
+function getApiBaseUrl() {
+  const hostname = window.location.hostname;
+  const port = window.location.port;
+
+  if (hostname !== 'localhost' && hostname !== '127.0.0.1' && !window.location.protocol.startsWith('file')) {
+    return '';
+  }
+  if (['5000', '5001', '5002'].includes(port)) {
+    return '';
+  }
+  return 'http://localhost:5002';
+}
+
 // ─── FETCH MENU ───────────────────────────────────────────────────────────────
 async function fetchMenu() {
   try {
-    const res = await fetch('/api/menu');
+    const res = await fetch(`${getApiBaseUrl()}/api/menu`);
     const json = await res.json();
     if (json.status === 'success') {
       state.menuData = json.data;
@@ -847,28 +861,26 @@ async function placeOrder() {
   };
 
   try {
-    const res = await fetch('/api/orders', {
+    const res = await fetch(`${getApiBaseUrl()}/api/orders`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(orderPayload)
     });
     const json = await res.json();
-    if (json.status === 'success') {
+    if (res.ok && json.status === 'success') {
       state.placedOrder = { ...orderPayload, ref: json.order?.id || generateOrderRef() };
+      showConfirmation();
     } else {
-      throw new Error(json.message || 'Order failed');
+      throw new Error(json.message || 'Order processing failed');
     }
   } catch (err) {
-    // Graceful fallback: still confirm if API not yet set up
-    console.warn('Order API not yet available, confirming locally:', err.message);
-    state.placedOrder = { ...orderPayload, ref: generateOrderRef() };
+    console.error('Order API Error:', err.message);
+    showToast('error', 'Connection Error', 'Could not connect to backend server on port 5002. Please ensure server is running.');
+  } finally {
+    btn.classList.remove('loading');
+    btn.innerHTML = '<i class="fa-solid fa-check"></i> Place Order';
+    btn.disabled = false;
   }
-
-  showConfirmation();
-
-  btn.classList.remove('loading');
-  btn.innerHTML = '<i class="fa-solid fa-check"></i> Place Order';
-  btn.disabled = false;
 }
 
 function generateOrderRef() {

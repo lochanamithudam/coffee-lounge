@@ -212,6 +212,20 @@
 
   counters.forEach(c => counterObserver.observe(c));
 
+  /* ─── API Base URL Helper ────────────────────── */
+  function getApiBaseUrl() {
+    const hostname = window.location.hostname;
+    const port = window.location.port;
+
+    if (hostname !== 'localhost' && hostname !== '127.0.0.1' && !window.location.protocol.startsWith('file')) {
+      return '';
+    }
+    if (['5000', '5001', '5002'].includes(port)) {
+      return '';
+    }
+    return 'http://localhost:5002';
+  }
+
   /* ─── Form Submission Feedback ────────────────── */
   const contactForm = qs('#reservationForm');
   contactForm?.addEventListener('submit', async e => {
@@ -237,7 +251,7 @@
     }
 
     try {
-      const res = await fetch('/api/reservations', {
+      const res = await fetch(`${getApiBaseUrl()}/api/reservations`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
@@ -252,12 +266,18 @@
         contactForm.reset();
       } else {
         alert(data.message || 'Error submitting reservation.');
+        if (btn) {
+          btn.textContent = 'Failed ❌';
+          btn.style.background = '#8b0000';
+          btn.style.color = '#fff';
+        }
       }
     } catch (err) {
       console.error('Reservation API Error:', err);
+      alert('❌ Could not connect to backend server. Please make sure `npm start` is running in your terminal on port 5002!');
       if (btn) {
-        btn.textContent = 'Inquiry Sent ✓';
-        btn.style.background = 'linear-gradient(135deg, #4a7a5c, #6aaf7e)';
+        btn.textContent = 'Connection Error ❌';
+        btn.style.background = '#8b0000';
         btn.style.color = '#fff';
       }
     } finally {
@@ -288,7 +308,7 @@
     }
 
     try {
-      const res = await fetch('/api/newsletter', {
+      const res = await fetch(`${getApiBaseUrl()}/api/newsletter`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: input.value })
@@ -299,11 +319,12 @@
         input.value = '';
       } else {
         alert(data.message || 'Error joining newsletter.');
+        if (btn) btn.textContent = 'Failed';
       }
     } catch (err) {
       console.error('Newsletter API Error:', err);
-      if (btn) btn.textContent = 'Joined ✓';
-      input.value = '';
+      alert('❌ Could not connect to backend server. Please make sure `npm start` is running in your terminal on port 5002!');
+      if (btn) btn.textContent = 'Error';
     } finally {
       setTimeout(() => {
         if (btn) {
