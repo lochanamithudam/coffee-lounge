@@ -7,7 +7,13 @@ const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 const nodemailer = require('nodemailer');
-const mongoose = require('mongoose');
+let mongoose = null;
+try {
+  mongoose = require('mongoose');
+} catch (e) {
+  console.warn('⚠️ Mongoose module load warning:', e.message);
+}
+
 const dns = require('dns');
 
 // Fix for Windows DNS resolution for MongoDB Atlas SRV connection strings
@@ -45,7 +51,11 @@ if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
 // MONGODB ATLAS CONNECTION & SCHEMAS
 // -------------------------------------------------------------
 const MONGO_URI = process.env.MONGO_URI;
-if (MONGO_URI) {
+let Reservation = null;
+let Order = null;
+let Subscriber = null;
+
+if (mongoose && MONGO_URI) {
   mongoose.connect(MONGO_URI)
     .then(() => {
       console.log('🍃 Connected to MongoDB Atlas (CoffeeLoungeDB) successfully!');
@@ -53,57 +63,54 @@ if (MONGO_URI) {
     .catch(err => {
       console.error('❌ MongoDB Atlas Connection Error:', err.message);
     });
+
+  // 1. Reservation Schema & Model
+  const reservationSchema = new mongoose.Schema({
+    id: { type: String, required: true },
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    phone: { type: String, required: true },
+    date: { type: String, required: true },
+    time: { type: String, required: true },
+    guests: { type: String, default: '2 Guests' },
+    eventType: { type: String, default: 'Casual Dining' },
+    message: { type: String, default: '' },
+    createdAt: { type: Date, default: Date.now },
+    status: { type: String, default: 'Confirmed' }
+  }, { collection: 'Reservations' });
+  Reservation = mongoose.models.Reservation || mongoose.model('Reservation', reservationSchema);
+
+  // 2. Order Schema & Model
+  const orderSchema = new mongoose.Schema({
+    id: { type: String, required: true },
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    phone: { type: String, required: true },
+    orderType: { type: String, default: 'pickup' },
+    address: { type: String, default: null },
+    pickupTime: { type: String, default: null },
+    notes: { type: String, default: '' },
+    specialInstructions: { type: String, default: '' },
+    items: { type: Array, required: true },
+    subtotal: String,
+    deliveryFee: String,
+    taxes: String,
+    total: String,
+    status: { type: String, default: 'Confirmed' },
+    createdAt: { type: Date, default: Date.now }
+  }, { collection: 'Orders' });
+  Order = mongoose.models.Order || mongoose.model('Order', orderSchema);
+
+  // 3. Subscriber Schema & Model
+  const subscriberSchema = new mongoose.Schema({
+    id: { type: String, required: true },
+    email: { type: String, required: true, lowercase: true },
+    subscribedAt: { type: Date, default: Date.now }
+  }, { collection: 'Subscribers' });
+  Subscriber = mongoose.models.Subscriber || mongoose.model('Subscriber', subscriberSchema);
 } else {
-  console.warn('⚠️ MONGO_URI missing in .env file.');
+  console.warn('⚠️ Mongoose or MONGO_URI missing. Using local JSON storage fallback.');
 }
-
-// 1. Reservation Schema & Model
-const reservationSchema = new mongoose.Schema({
-  id: { type: String, required: true },
-  name: { type: String, required: true },
-  email: { type: String, required: true },
-  phone: { type: String, required: true },
-  date: { type: String, required: true },
-  time: { type: String, required: true },
-  guests: { type: String, default: '2 Guests' },
-  eventType: { type: String, default: 'Casual Dining' },
-  message: { type: String, default: '' },
-  createdAt: { type: Date, default: Date.now },
-  status: { type: String, default: 'Confirmed' }
-}, { collection: 'Reservations' });
-
-const Reservation = mongoose.model('Reservation', reservationSchema);
-
-// 2. Order Schema & Model
-const orderSchema = new mongoose.Schema({
-  id: { type: String, required: true },
-  name: { type: String, required: true },
-  email: { type: String, required: true },
-  phone: { type: String, required: true },
-  orderType: { type: String, default: 'pickup' },
-  address: { type: String, default: null },
-  pickupTime: { type: String, default: null },
-  notes: { type: String, default: '' },
-  specialInstructions: { type: String, default: '' },
-  items: { type: Array, required: true },
-  subtotal: String,
-  deliveryFee: String,
-  taxes: String,
-  total: String,
-  status: { type: String, default: 'Confirmed' },
-  createdAt: { type: Date, default: Date.now }
-}, { collection: 'Orders' });
-
-const Order = mongoose.model('Order', orderSchema);
-
-// 3. Subscriber Schema & Model
-const subscriberSchema = new mongoose.Schema({
-  id: { type: String, required: true },
-  email: { type: String, required: true, lowercase: true },
-  subscribedAt: { type: Date, default: Date.now }
-}, { collection: 'Subscribers' });
-
-const Subscriber = mongoose.model('Subscriber', subscriberSchema);
 
 // Middleware
 app.use(cors());
