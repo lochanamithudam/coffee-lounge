@@ -557,11 +557,18 @@ app.use('/api/*', (req, res) => {
   });
 });
 
-// Fallback to index.html for page navigation
+// Serve static assets or fallback to index.html for page navigation
 app.get('*', (req, res) => {
-  const isAsset = /\.(css|js|png|jpg|jpeg|gif|ico|svg|mp4|webm|woff|woff2|ttf|eot)$/i.test(req.path);
-  if (isAsset) {
-    return res.status(404).send('Asset not found');
+  const filePath = path.join(__dirname, req.path);
+  try {
+    if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+      return res.sendFile(filePath);
+    }
+  } catch (e) {
+    // Ignore file stat errors
+  }
+  if (req.path.includes('order.html')) {
+    return res.sendFile(path.join(__dirname, 'order.html'));
   }
   res.sendFile(path.join(__dirname, 'index.html'));
 });
