@@ -1,6 +1,8 @@
 node_modules/
 .env
-.env*
+.env.local
+.env.production
+# .env.example is intentionally NOT ignored — it's safe to commit (no real secrets)
 .vercel/
 *.log
 CHAT_TRANSCRIPT_COFFEE_LOUNGE*
