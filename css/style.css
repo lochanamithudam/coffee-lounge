@@ -730,8 +730,6 @@ ul {
   align-items: center;
 }
 
-.about-content {}
-
 .about-content .tagline {
   display: block;
   margin-bottom: 20px;
@@ -1478,8 +1476,6 @@ ul {
   margin-top: 2px;
 }
 
-.contact-item-content {}
-
 .contact-item-label {
   font-size: 0.6rem;
   letter-spacing: 0.2em;
@@ -1688,8 +1684,6 @@ footer::before {
   grid-template-columns: 1.8fr 1fr 1fr 1.4fr;
   gap: 60px;
 }
-
-.footer-brand {}
 
 .footer-logo {
   display: flex;

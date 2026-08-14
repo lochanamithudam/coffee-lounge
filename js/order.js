@@ -110,7 +110,9 @@ const el = {
 
 // ─── NAVBAR SCROLL ────────────────────────────────────────────────────────────
 window.addEventListener('scroll', () => {
-  el.navbar.classList.toggle('scrolled', window.scrollY > 20);
+  if (el.navbar) {
+    el.navbar.classList.toggle('scrolled', window.scrollY > 20);
+  }
 }, { passive: true });
 
 // ─── ORDER TYPE TOGGLE ───────────────────────────────────────────────────────
@@ -304,15 +306,15 @@ function createMenuCard(item) {
       <div class="menu-item-footer">
         <span class="menu-item-price">${escapeHtml(item.price)}</span>
         ${qty === 0
-          ? `<button class="btn-add-to-cart" data-id="${item.id}" aria-label="Add ${escapeHtml(item.name)} to cart">
+      ? `<button class="btn-add-to-cart" data-id="${item.id}" aria-label="Add ${escapeHtml(item.name)} to cart">
                <i class="fa-solid fa-plus" aria-hidden="true"></i> Add
              </button>`
-          : `<div class="item-qty-control" role="group" aria-label="Quantity for ${escapeHtml(item.name)}">
+      : `<div class="item-qty-control" role="group" aria-label="Quantity for ${escapeHtml(item.name)}">
                <button class="qty-btn" data-action="decrease" data-id="${item.id}" aria-label="Decrease quantity">−</button>
                <span class="qty-display" aria-live="polite" aria-atomic="true">${qty}</span>
                <button class="qty-btn" data-action="increase" data-id="${item.id}" aria-label="Increase quantity">+</button>
              </div>`
-        }
+    }
       </div>
     </div>
   `;
@@ -875,7 +877,7 @@ async function placeOrder() {
     }
   } catch (err) {
     console.error('Order API Error:', err.message);
-    showToast('error', 'Connection Error', 'Could not connect to backend server on port 5002. Please ensure server is running.');
+    showToast('error', 'Connection Error', 'Could not connect to backend server. Please ensure the server is running.');
   } finally {
     btn.classList.remove('loading');
     btn.innerHTML = '<i class="fa-solid fa-check"></i> Place Order';
