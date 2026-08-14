@@ -177,11 +177,12 @@ const reservationLimiter = rateLimit({
   legacyHeaders: false
 });
 
-// NOTE: Static files (CSS, Images, Videos, HTML) are served by Vercel CDN.
-// express.static is only used in local development.
-if (!process.env.VERCEL) {
-  app.use(express.static(path.join(__dirname)));
-}
+// Serve static frontend files (CSS, JS, Images, Videos, HTML)
+app.use(express.static(path.join(__dirname)));
+app.use('/css', express.static(path.join(__dirname, 'css')));
+app.use('/js', express.static(path.join(__dirname, 'js')));
+app.use('/Images', express.static(path.join(__dirname, 'Images')));
+app.use('/Videos', express.static(path.join(__dirname, 'Videos')));
 
 // Local File Fallback Paths
 const DATA_DIR = process.env.VERCEL ? path.join('/tmp', 'data') : path.join(__dirname, 'data');
@@ -644,23 +645,35 @@ app.use('/api/*', (req, res) => {
   });
 });
 
-// Serve static assets or fallback to index.html for page navigation (local development only)
-if (!process.env.VERCEL) {
-  app.get('*', (req, res) => {
-    const filePath = path.join(__dirname, req.path);
-    try {
-      if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
-        return res.sendFile(filePath);
-      }
-    } catch (e) {
-      // Ignore file stat errors
+// HTML page routing
+app.get('/order', (req, res) => {
+  res.sendFile(path.join(__dirname, 'order.html'));
+});
+app.get('/order.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'order.html'));
+});
+app.get('/index.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// Catch-all fallback for static assets and page navigation
+app.get('*', (req, res) => {
+  const filePath = path.join(__dirname, req.path);
+  try {
+    if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+      return res.sendFile(filePath);
     }
-    if (req.path.includes('order.html')) {
-      return res.sendFile(path.join(__dirname, 'order.html'));
-    }
-    res.sendFile(path.join(__dirname, 'index.html'));
-  });
-}
+  } catch (e) {
+    // Ignore file stat errors
+  }
+  if (req.path.includes('order')) {
+    return res.sendFile(path.join(__dirname, 'order.html'));
+  }
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 // Start Server with automatic port fallback
 function startServer(portToUse) {
