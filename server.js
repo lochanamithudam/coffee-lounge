@@ -644,21 +644,23 @@ app.use('/api/*', (req, res) => {
   });
 });
 
-// Serve static assets or fallback to index.html for page navigation
-app.get('*', (req, res) => {
-  const filePath = path.join(__dirname, req.path);
-  try {
-    if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
-      return res.sendFile(filePath);
+// Serve static assets or fallback to index.html for page navigation (local development only)
+if (!process.env.VERCEL) {
+  app.get('*', (req, res) => {
+    const filePath = path.join(__dirname, req.path);
+    try {
+      if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+        return res.sendFile(filePath);
+      }
+    } catch (e) {
+      // Ignore file stat errors
     }
-  } catch (e) {
-    // Ignore file stat errors
-  }
-  if (req.path.includes('order.html')) {
-    return res.sendFile(path.join(__dirname, 'order.html'));
-  }
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
+    if (req.path.includes('order.html')) {
+      return res.sendFile(path.join(__dirname, 'order.html'));
+    }
+    res.sendFile(path.join(__dirname, 'index.html'));
+  });
+}
 
 // Start Server with automatic port fallback
 function startServer(portToUse) {
