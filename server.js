@@ -97,34 +97,40 @@ if (mongoose) {
   Subscriber = mongoose.models.Subscriber || mongoose.model('Subscriber', subscriberSchema);
 }
 
-let isConnecting = false;
+let cached = global.mongoose;
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
+
 async function ensureDbConnected() {
   const uri = process.env.MONGO_URI;
   if (!mongoose || !uri) {
     console.warn('⚠️ Mongoose or MONGO_URI missing.');
     return false;
   }
-  if (mongoose.connection && mongoose.connection.readyState === 1) {
+  if (cached.conn && mongoose.connection.readyState === 1) {
     return true;
   }
-  if (isConnecting) {
-    // Wait briefly for an in-progress connection attempt
-    await new Promise(r => setTimeout(r, 1000));
-    return mongoose.connection.readyState === 1;
+  if (!cached.promise) {
+    cached.promise = mongoose.connect(uri, {
+      serverSelectionTimeoutMS: 15000,
+      connectTimeoutMS: 15000,
+      bufferCommands: false
+    }).then((m) => {
+      console.log('🍃 Connected to MongoDB Atlas (CoffeeLoungeDB) successfully!');
+      return m;
+    }).catch(err => {
+      console.error('❌ MongoDB Atlas Connection Error:', err.message);
+      cached.promise = null;
+      throw err;
+    });
   }
   try {
-    isConnecting = true;
-    await mongoose.connect(uri, {
-      serverSelectionTimeoutMS: 10000,
-      connectTimeoutMS: 10000
-    });
-    console.log('🍃 Connected to MongoDB Atlas (CoffeeLoungeDB) successfully!');
+    cached.conn = await cached.promise;
     return mongoose.connection.readyState === 1;
-  } catch (err) {
-    console.error('❌ MongoDB Atlas Connection Error:', err.message);
+  } catch {
+    cached.promise = null;
     return false;
-  } finally {
-    isConnecting = false;
   }
 }
 
