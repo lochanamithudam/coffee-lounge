@@ -4,6 +4,8 @@ if (!globalThis.crypto) {
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const fs = require('fs');
 const path = require('path');
 const nodemailer = require('nodemailer');
@@ -51,37 +53,11 @@ if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
 // -------------------------------------------------------------
 // MONGODB ATLAS CONNECTION & SCHEMAS
 // -------------------------------------------------------------
-const MONGO_URI = process.env.MONGO_URI;
 let Reservation = null;
 let Order = null;
 let Subscriber = null;
 
-let isConnecting = false;
-async function ensureDbConnected() {
-  if (!mongoose || !MONGO_URI) return false;
-  if (mongoose.connection.readyState === 1) return true;
-
-  try {
-    if (!isConnecting) {
-      isConnecting = true;
-      await mongoose.connect(MONGO_URI, {
-        serverSelectionTimeoutMS: 5000,
-        connectTimeoutMS: 5000
-      });
-      isConnecting = false;
-      console.log('🍃 Connected to MongoDB Atlas (CoffeeLoungeDB) successfully!');
-    }
-    return mongoose.connection.readyState === 1;
-  } catch (err) {
-    isConnecting = false;
-    console.error('❌ MongoDB Atlas Connection Error:', err.message);
-    return false;
-  }
-}
-
-if (mongoose && MONGO_URI) {
-  ensureDbConnected();
-
+if (mongoose) {
   // 1. Reservation Schema & Model
   const reservationSchema = new mongoose.Schema({
     id: { type: String, required: true },
@@ -126,14 +102,84 @@ if (mongoose && MONGO_URI) {
     subscribedAt: { type: Date, default: Date.now }
   }, { collection: 'Subscribers' });
   Subscriber = mongoose.models.Subscriber || mongoose.model('Subscriber', subscriberSchema);
-} else {
-  console.warn('⚠️ Mongoose or MONGO_URI missing. Using local JSON storage fallback.');
 }
 
-// Middleware
-app.use(cors());
+let isConnecting = false;
+async function ensureDbConnected() {
+  const uri = process.env.MONGO_URI;
+  if (!mongoose || !uri) return false;
+  if (mongoose.connection && mongoose.connection.readyState === 1) return true;
+
+  try {
+    if (!isConnecting) {
+      isConnecting = true;
+      await mongoose.connect(uri, {
+        serverSelectionTimeoutMS: 8000,
+        connectTimeoutMS: 8000
+      });
+      isConnecting = false;
+      console.log('🍃 Connected to MongoDB Atlas (CoffeeLoungeDB) successfully!');
+    }
+    return mongoose.connection && mongoose.connection.readyState === 1;
+  } catch (err) {
+    isConnecting = false;
+    console.error('❌ MongoDB Atlas Connection Error:', err.message);
+    return false;
+  }
+}
+
+// Initial connection attempt
+if (mongoose && process.env.MONGO_URI) {
+  ensureDbConnected().catch(() => {});
+}
+
+// Middleware & CORS
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow any request from *.vercel.app, localhost, or without origin
+    if (!origin) return callback(null, true);
+    if (
+      origin.endsWith('.vercel.app') ||
+      origin.includes('localhost') ||
+      origin.includes('127.0.0.1') ||
+      (process.env.CORS_ORIGIN && process.env.CORS_ORIGIN.split(',').includes(origin))
+    ) {
+      return callback(null, true);
+    }
+    return callback(null, true);
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Rate limiters
+const orderLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10,
+  message: { status: 'error', message: 'Too many orders. Please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false
+});
+
+const newsletterLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 5,
+  message: { status: 'error', message: 'Too many subscription attempts. Please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false
+});
+
+const reservationLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10,
+  message: { status: 'error', message: 'Too many reservation requests. Please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false
+});
 
 // Serve static frontend files
 app.use(express.static(path.join(__dirname)));
@@ -182,7 +228,7 @@ function writeJSON(filePath, data) {
     return true;
   } catch (err) {
     console.error(`Error writing ${filePath}:`, err);
-    return true;
+    return false; // fixed: was incorrectly returning true on error
   }
 }
 
@@ -195,7 +241,7 @@ app.get('/api/health', (req, res) => {
   res.json({
     status: 'success',
     message: 'Coffee Lounge API Backend is active and operational.',
-    database: mongoose.connection.readyState === 1 ? 'MongoDB Atlas (Connected)' : 'Local JSON Storage',
+    database: mongoose?.connection?.readyState === 1 ? 'MongoDB Atlas (Connected)' : 'Local JSON Storage',
     timestamp: new Date().toISOString()
   });
 });
@@ -251,7 +297,7 @@ app.get('/api/menu', (req, res) => {
 });
 
 // 3. Table Reservation Endpoint
-app.post('/api/reservations', async (req, res) => {
+app.post('/api/reservations', reservationLimiter, async (req, res) => {
   const { name, email, phone, date, time, guests, eventType, message } = req.body;
 
   // Validation
@@ -354,7 +400,7 @@ app.get('/api/reservations', async (req, res) => {
 });
 
 // 4. Online Order Endpoint
-app.post('/api/orders', async (req, res) => {
+app.post('/api/orders', orderLimiter, async (req, res) => {
   const { name, email, phone, orderType, address, pickupTime, notes, specialInstructions, items, subtotal, deliveryFee, taxes, total } = req.body;
 
   // Basic validation
@@ -491,10 +537,11 @@ app.get('/api/orders', async (req, res) => {
 });
 
 // 5. Newsletter Subscription Endpoint
-app.post('/api/newsletter', async (req, res) => {
+app.post('/api/newsletter', newsletterLimiter, async (req, res) => {
   const { email } = req.body;
 
-  if (!email || !email.includes('@')) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!email || !emailRegex.test(email.trim())) {
     return res.status(400).json({
       status: 'error',
       message: 'Please enter a valid email address.'

@@ -69,7 +69,6 @@
   const driftEls = qsa('.drift-text');
 
   let ticking = false;
-  let lastScrollY = window.scrollY;
 
   function updateDrift() {
     const scrollY = window.scrollY;
