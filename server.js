@@ -104,25 +104,28 @@ if (mongoose) {
   Subscriber = mongoose.models.Subscriber || mongoose.model('Subscriber', subscriberSchema);
 }
 
-let isConnecting = false;
+let cachedDb = null;
 async function ensureDbConnected() {
   const uri = process.env.MONGO_URI;
-  if (!mongoose || !uri) return false;
-  if (mongoose.connection && mongoose.connection.readyState === 1) return true;
-
+  if (!mongoose || !uri) {
+    console.warn('⚠️ Mongoose or MONGO_URI missing.');
+    return false;
+  }
+  if (mongoose.connection && mongoose.connection.readyState === 1) {
+    return true;
+  }
   try {
-    if (!isConnecting) {
-      isConnecting = true;
-      await mongoose.connect(uri, {
-        serverSelectionTimeoutMS: 8000,
-        connectTimeoutMS: 8000
+    if (!cachedDb) {
+      cachedDb = mongoose.connect(uri, {
+        serverSelectionTimeoutMS: 10000,
+        connectTimeoutMS: 10000
       });
-      isConnecting = false;
-      console.log('🍃 Connected to MongoDB Atlas (CoffeeLoungeDB) successfully!');
     }
+    await cachedDb;
+    console.log('🍃 Connected to MongoDB Atlas (CoffeeLoungeDB) successfully!');
     return mongoose.connection && mongoose.connection.readyState === 1;
   } catch (err) {
-    isConnecting = false;
+    cachedDb = null;
     console.error('❌ MongoDB Atlas Connection Error:', err.message);
     return false;
   }
@@ -237,11 +240,13 @@ function writeJSON(filePath, data) {
 // -------------------------------------------------------------
 
 // 1. Health Check
-app.get('/api/health', (req, res) => {
+app.get('/api/health', async (req, res) => {
+  const isConnected = await ensureDbConnected();
   res.json({
     status: 'success',
     message: 'Coffee Lounge API Backend is active and operational.',
-    database: mongoose?.connection?.readyState === 1 ? 'MongoDB Atlas (Connected)' : 'Local JSON Storage',
+    database: isConnected ? 'MongoDB Atlas (Connected)' : 'Local JSON Storage',
+    mongoUriConfigured: Boolean(process.env.MONGO_URI),
     timestamp: new Date().toISOString()
   });
 });
