@@ -7,13 +7,14 @@
   'use strict';
 
   /* ─── Utility ─────────────────────────────────── */
-  const qs  = (s, c = document) => c.querySelector(s);
+  const qs = (s, c = document) => c.querySelector(s);
   const qsa = (s, c = document) => [...c.querySelectorAll(s)];
 
   /* ─── Navbar Scroll Behavior ──────────────────── */
   const navbar = qs('#navbar');
 
   function handleNavScroll() {
+    if (!navbar) return;
     if (window.scrollY > 80) {
       navbar.classList.add('scrolled');
     } else {
@@ -25,9 +26,9 @@
   handleNavScroll();
 
   /* ─── Mobile Nav ──────────────────────────────── */
-  const hamburger    = qs('.nav-hamburger');
-  const mobileNav    = qs('.mobile-nav');
-  const mobileClose  = qs('.mobile-nav-close');
+  const hamburger = qs('.nav-hamburger');
+  const mobileNav = qs('.mobile-nav');
+  const mobileClose = qs('.mobile-nav-close');
   const mobileOverlay = qs('.mobile-overlay');
 
   function openMobileNav() {
@@ -71,8 +72,6 @@
   let ticking = false;
 
   function updateDrift() {
-    const scrollY = window.scrollY;
-
     driftEls.forEach((el, i) => {
       const rect = el.getBoundingClientRect();
       const viewportCenter = window.innerHeight / 2;
@@ -95,7 +94,6 @@
       requestAnimationFrame(updateDrift);
       ticking = true;
     }
-    lastScrollY = window.scrollY;
   }, { passive: true });
 
   updateDrift();
@@ -121,7 +119,7 @@
   sections.forEach(s => sectionObserver.observe(s));
 
   /* ─── Menu Tabs ───────────────────────────────── */
-  const menuTabs   = qsa('.menu-tab');
+  const menuTabs = qsa('.menu-tab');
   const menuPanels = qsa('.menu-panel');
 
   menuTabs.forEach(tab => {
@@ -138,7 +136,7 @@
   });
 
   /* ─── Lightbox ────────────────────────────────── */
-  const lightbox    = qs('.lightbox');
+  const lightbox = qs('.lightbox');
   const lightboxImg = qs('.lightbox img');
   const lightboxClose = qs('.lightbox-close');
 
@@ -177,7 +175,7 @@
       const container = qs('.hero-video-container');
       if (container) {
         container.style.backgroundImage = "url('Images/lounge_interior.jpg')";
-        container.style.backgroundSize  = 'cover';
+        container.style.backgroundSize = 'cover';
         container.style.backgroundPosition = 'center';
       }
     });
@@ -189,7 +187,7 @@
     (entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          const el  = entry.target;
+          const el = entry.target;
           const end = parseInt(el.dataset.count);
           const suffix = el.dataset.suffix || '';
           let current = 0;
@@ -222,7 +220,7 @@
     if (['5000', '5001', '5002'].includes(port)) {
       return '';
     }
-    return 'http://localhost:5002';
+    return 'http://localhost:5000';
   }
 
   /* ─── Form Submission Feedback ────────────────── */
@@ -231,7 +229,7 @@
     e.preventDefault();
     const btn = contactForm.querySelector('button[type="submit"]');
     const originalText = btn ? btn.innerHTML : 'Send Inquiry';
-    
+
     // Gather form data
     const formData = {
       name: qs('#guestName')?.value,
@@ -398,10 +396,12 @@
     function updateTempDisplay(currentTemp) {
       const rounded = Math.max(0, Math.min(100, Math.round(currentTemp)));
       numEl.textContent = rounded;
+      // Apply temperature-derived colour to the badge number
+      numEl.style.color = tempToColor(rounded);
     }
 
     let fallbackTemp = 100;
-    
+
     function tick() {
       if (heroVideo && heroVideo.duration && !isNaN(heroVideo.duration)) {
         // Sync temperature directly with video progress: 100°C at start -> 0°C at end
@@ -420,7 +420,7 @@
     requestAnimationFrame(tick);
   })();
 
-  console.log('%cCoffee Lounge — Fine Coffee & Lounge ☕', 
+  console.log('%cCoffee Lounge — Fine Coffee & Lounge ☕',
     'color: #c9a84c; font-size: 14px; font-family: serif; padding: 4px 0;');
 
 })();

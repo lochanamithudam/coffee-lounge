@@ -154,7 +154,7 @@ function getApiBaseUrl() {
   if (['5000', '5001', '5002'].includes(port)) {
     return '';
   }
-  return 'http://localhost:5002';
+  return 'http://localhost:5000';
 }
 
 // ─── FETCH MENU ───────────────────────────────────────────────────────────────

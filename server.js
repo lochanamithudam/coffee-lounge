@@ -97,7 +97,7 @@ if (mongoose) {
   Subscriber = mongoose.models.Subscriber || mongoose.model('Subscriber', subscriberSchema);
 }
 
-let cachedDb = null;
+let isConnecting = false;
 async function ensureDbConnected() {
   const uri = process.env.MONGO_URI;
   if (!mongoose || !uri) {
@@ -107,26 +107,30 @@ async function ensureDbConnected() {
   if (mongoose.connection && mongoose.connection.readyState === 1) {
     return true;
   }
+  if (isConnecting) {
+    // Wait briefly for an in-progress connection attempt
+    await new Promise(r => setTimeout(r, 1000));
+    return mongoose.connection.readyState === 1;
+  }
   try {
-    if (!cachedDb) {
-      cachedDb = mongoose.connect(uri, {
-        serverSelectionTimeoutMS: 10000,
-        connectTimeoutMS: 10000
-      });
-    }
-    await cachedDb;
+    isConnecting = true;
+    await mongoose.connect(uri, {
+      serverSelectionTimeoutMS: 10000,
+      connectTimeoutMS: 10000
+    });
     console.log('🍃 Connected to MongoDB Atlas (CoffeeLoungeDB) successfully!');
-    return mongoose.connection && mongoose.connection.readyState === 1;
+    return mongoose.connection.readyState === 1;
   } catch (err) {
-    cachedDb = null;
     console.error('❌ MongoDB Atlas Connection Error:', err.message);
     return false;
+  } finally {
+    isConnecting = false;
   }
 }
 
 // Initial connection attempt
 if (mongoose && process.env.MONGO_URI) {
-  ensureDbConnected().catch(() => {});
+  ensureDbConnected().catch(() => { });
 }
 
 // Middleware & CORS
@@ -179,11 +183,19 @@ const reservationLimiter = rateLimit({
 
 // Admin Authentication Middleware (protects private customer data endpoints)
 const requireAdminAuth = (req, res, next) => {
-  const expectedKey = process.env.ADMIN_API_KEY || 'coffee_lounge_admin_secret_2026';
+  const expectedKey = process.env.ADMIN_API_KEY;
+
+  if (!expectedKey) {
+    return res.status(503).json({
+      status: 'error',
+      message: 'Admin access is not configured on this server.'
+    });
+  }
+
   const providedKey = req.headers['x-admin-key'] ||
-                      req.query.adminKey ||
-                      req.query.key ||
-                      (req.headers.authorization ? req.headers.authorization.replace(/^Bearer\s+/i, '').trim() : null);
+    req.query.adminKey ||
+    req.query.key ||
+    (req.headers.authorization ? req.headers.authorization.replace(/^Bearer\s+/i, '').trim() : null);
 
   if (providedKey && providedKey === expectedKey) {
     return next();
@@ -414,7 +426,7 @@ app.get('/api/reservations', requireAdminAuth, async (req, res) => {
       return res.json({ status: 'success', data });
     }
     throw new Error('MongoDB not connected');
-  } catch (err) {
+  } catch {
     const fallbackData = readJSON(RESERVATIONS_FILE);
     return res.json({ status: 'success', data: fallbackData });
   }
@@ -551,7 +563,7 @@ app.get('/api/orders', requireAdminAuth, async (req, res) => {
       return res.json({ status: 'success', data });
     }
     throw new Error('MongoDB not connected');
-  } catch (err) {
+  } catch {
     const fallbackData = readJSON(ORDERS_FILE);
     return res.json({ status: 'success', data: fallbackData });
   }
@@ -572,6 +584,10 @@ app.post('/api/newsletter', newsletterLimiter, async (req, res) => {
   const normalizedEmail = email.trim().toLowerCase();
 
   try {
+    // Check for duplicates in local fallback first (universal gate regardless of DB state)
+    const subscribers = readJSON(SUBSCRIBERS_FILE);
+    const existingLocal = subscribers.find(sub => sub.email === normalizedEmail);
+
     const subscriberData = {
       id: 'SUB-' + Date.now().toString(36).toUpperCase(),
       email: normalizedEmail,
@@ -592,15 +608,25 @@ app.post('/api/newsletter', newsletterLimiter, async (req, res) => {
         const newDoc = new Subscriber(subscriberData);
         await newDoc.save();
         console.log(`🍃 Saved subscriber ${subscriberData.email} to MongoDB Atlas!`);
+      } else if (existingLocal) {
+        // MongoDB offline — use local duplicate check result
+        return res.status(200).json({
+          status: 'success',
+          message: 'You are already subscribed to our VIP Newsletter!'
+        });
       }
     } catch (dbErr) {
       console.error(`❌ MongoDB Atlas Subscriber Save Error:`, dbErr.message);
+      if (existingLocal) {
+        return res.status(200).json({
+          status: 'success',
+          message: 'You are already subscribed to our VIP Newsletter!'
+        });
+      }
     }
 
     // Save to local JSON fallback
-    const subscribers = readJSON(SUBSCRIBERS_FILE);
-    const existing = subscribers.find(sub => sub.email === normalizedEmail);
-    if (!existing) {
+    if (!existingLocal) {
       subscribers.push(subscriberData);
       writeJSON(SUBSCRIBERS_FILE, subscribers);
     }
@@ -650,7 +676,7 @@ app.get('/api/newsletter', requireAdminAuth, async (req, res) => {
       return res.json({ status: 'success', data });
     }
     throw new Error('MongoDB not connected');
-  } catch (err) {
+  } catch {
     const fallbackData = readJSON(SUBSCRIBERS_FILE);
     return res.json({ status: 'success', data: fallbackData });
   }
@@ -685,7 +711,7 @@ app.get('*', (req, res) => {
     if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
       return res.sendFile(filePath);
     }
-  } catch (e) {
+  } catch {
     // Ignore file stat errors
   }
   if (req.path.includes('order')) {

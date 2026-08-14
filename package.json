@@ -5,7 +5,10 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "lint": "npx eslint .",
+    "lint:fix": "npx eslint . --fix",
+    "lint:report": "npx eslint . --format html -o eslint-report.html"
   },
   "dependencies": {
     "cors": "^2.8.6",
