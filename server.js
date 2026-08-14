@@ -39,15 +39,8 @@ if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
       pass: process.env.EMAIL_PASS
     }
   });
-  transporter.verify((error) => {
-    if (error) {
-      console.error('❌ Nodemailer Verification Error:', error.message);
-    } else {
-      console.log(`✉️ Email notification service ready for: ${process.env.EMAIL_USER}`);
-    }
-  });
 } else {
-  console.warn('⚠️ EMAIL_USER or EMAIL_PASS missing in .env file. Email notifications disabled.');
+  console.warn('⚠️ EMAIL_USER or EMAIL_PASS missing. Email notifications disabled.');
 }
 
 // -------------------------------------------------------------
