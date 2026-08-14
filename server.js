@@ -177,8 +177,11 @@ const reservationLimiter = rateLimit({
   legacyHeaders: false
 });
 
-// Serve static frontend files
-app.use(express.static(path.join(__dirname)));
+// NOTE: Static files (CSS, Images, Videos, HTML) are served by Vercel CDN.
+// express.static is only used in local development.
+if (!process.env.VERCEL) {
+  app.use(express.static(path.join(__dirname)));
+}
 
 // Local File Fallback Paths
 const DATA_DIR = process.env.VERCEL ? path.join('/tmp', 'data') : path.join(__dirname, 'data');
