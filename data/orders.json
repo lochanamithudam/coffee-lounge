@@ -1,1 +1,26 @@
-[]
+[
+  {
+    "id": "ORD-MSQCIR4C",
+    "name": "Test Customer",
+    "email": "lochanamithudam097@gmail.com",
+    "phone": "0771234567",
+    "orderType": "pickup",
+    "address": null,
+    "pickupTime": null,
+    "notes": "",
+    "specialInstructions": "",
+    "items": [
+      {
+        "name": "Signature Velvet Latte",
+        "qty": 2,
+        "lineTotal": "?680"
+      }
+    ],
+    "subtotal": "?680",
+    "deliveryFee": "?0",
+    "taxes": "?34",
+    "total": "?714",
+    "status": "Confirmed",
+    "createdAt": "2026-08-12T17:11:06.444Z"
+  }
+]

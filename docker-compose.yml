@@ -1,0 +1,13 @@
+services:
+  coffee-lounge:
+    build: .
+    container_name: coffee_lounge_app
+    ports:
+      - "5002:5002"
+    env_file:
+      - .env
+    environment:
+      - PORT=5002
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped

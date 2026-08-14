@@ -11,5 +11,31 @@
     "message": "Window table please",
     "createdAt": "2026-08-09T20:42:05.219Z",
     "status": "Confirmed"
+  },
+  {
+    "id": "RES-MSQCXE9G",
+    "name": "Lochana Mithudam",
+    "email": "lochanamithudam097@gmail.com",
+    "phone": "0771234567",
+    "date": "2026-08-25",
+    "time": "8:00 PM",
+    "guests": "3 Guests",
+    "eventType": "Casual Dining",
+    "message": "Testing MongoDB Atlas reservation sync",
+    "createdAt": "2026-08-12T17:22:29.620Z",
+    "status": "Confirmed"
+  },
+  {
+    "id": "RES-MSRMFMVT",
+    "name": "Lochana Mithudam",
+    "email": "lochanamithudam097@gmail.com",
+    "phone": "+94760975547",
+    "date": "2026-08-29",
+    "time": "05:00 PM",
+    "guests": "4 Guests",
+    "eventType": "Business Meeting",
+    "message": "Test reservation email fix",
+    "createdAt": "2026-08-13T14:36:23.321Z",
+    "status": "Confirmed"
   }
 ]
