@@ -177,6 +177,25 @@ const reservationLimiter = rateLimit({
   legacyHeaders: false
 });
 
+// Admin Authentication Middleware (protects private customer data endpoints)
+const requireAdminAuth = (req, res, next) => {
+  const expectedKey = process.env.ADMIN_API_KEY || 'coffee_lounge_admin_secret_2026';
+  const providedKey = req.headers['x-admin-key'] ||
+                      req.query.adminKey ||
+                      req.query.key ||
+                      (req.headers.authorization ? req.headers.authorization.replace(/^Bearer\s+/i, '').trim() : null);
+
+  if (providedKey && providedKey === expectedKey) {
+    return next();
+  }
+
+  return res.status(401).json({
+    status: 'error',
+    message: 'Unauthorized: Admin API key required to view customer records.'
+  });
+};
+
+
 // Serve static frontend files (CSS, JS, Images, Videos, HTML)
 app.use(express.static(path.join(__dirname)));
 app.use('/css', express.static(path.join(__dirname, 'css')));
@@ -386,8 +405,8 @@ app.post('/api/reservations', reservationLimiter, async (req, res) => {
   }
 });
 
-// GET Reservations
-app.get('/api/reservations', async (req, res) => {
+// GET Reservations (Protected)
+app.get('/api/reservations', requireAdminAuth, async (req, res) => {
   try {
     await ensureDbConnected();
     if (Reservation && mongoose && mongoose.connection.readyState === 1) {
@@ -523,8 +542,8 @@ app.post('/api/orders', orderLimiter, async (req, res) => {
   }
 });
 
-// GET Orders
-app.get('/api/orders', async (req, res) => {
+// GET Orders (Protected)
+app.get('/api/orders', requireAdminAuth, async (req, res) => {
   try {
     await ensureDbConnected();
     if (Order && mongoose && mongoose.connection.readyState === 1) {
@@ -622,8 +641,8 @@ app.post('/api/newsletter', newsletterLimiter, async (req, res) => {
   }
 });
 
-// GET Subscribers
-app.get('/api/newsletter', async (req, res) => {
+// GET Subscribers (Protected)
+app.get('/api/newsletter', requireAdminAuth, async (req, res) => {
   try {
     await ensureDbConnected();
     if (Subscriber && mongoose && mongoose.connection.readyState === 1) {
