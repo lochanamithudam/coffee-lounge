@@ -1,4 +1,8 @@
 node_modules/
 .env
-.vercel
 .env*
+.vercel/
+*.log
+CHAT_TRANSCRIPT_COFFEE_LOUNGE*
+VERCEL_MONGODB_FIX_REPORT*
+BACKEND_ARCHITECTURE*
