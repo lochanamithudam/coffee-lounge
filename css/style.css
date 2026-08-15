@@ -469,7 +469,7 @@ ul {
 }
 
 .hero-title {
-  font-family: 'Cormorant Garamond', 'Bodoni Moda', 'Playfair Display', Georgia, serif;
+  font-family: 'Cinzel', 'Playfair Display', Georgia, serif;
   font-size: clamp(2rem, 3.4vw, 3.4rem);
   font-weight: 300;
   line-height: 1.18;
