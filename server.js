@@ -322,9 +322,9 @@ app.get('/api/menu', (req, res) => {
     {
       category: 'Savory Bites',
       items: [
-        { id: 's1', name: 'Smashed Avocado Toast', price: '₹480', description: 'Sourdough, whipped ricotta, Hass avocado, cherry tomatoes & poached egg', popular: true, image: 'Images/avocado_toast.jpg' },
+        { id: 's1', name: 'Smashed Avocado Toast', price: '₹485', description: 'Sourdough, whipped ricotta, Hass avocado, cherry tomatoes & poached egg', popular: true, image: 'Images/avocado_toast.jpg' },
         { id: 's2', name: 'Smoked Salmon Bagel', price: '₹560', description: 'House sesame bagel, cream cheese, Norwegian smoked salmon & fresh dill', popular: true, image: 'Images/smoked_salmon_bagel.jpg' },
-        { id: 's3', name: 'Garden Bruschetta Board', price: '₹420', description: 'Toasted ciabatta bites with heirloom tomatoes, fresh basil & aged balsamic', popular: false, image: 'Images/garden_bruschetta.jpg' },
+        { id: 's3', name: 'Garden Bruschetta Board', price: '₹425', description: 'Toasted ciabatta bites with heirloom tomatoes, fresh basil & aged balsamic', popular: false, image: 'Images/garden_bruschetta.jpg' },
         { id: 's4', name: 'Truffle & Wild Mushroom Crostini', price: '₹490', description: 'Sourdough crostini with wild chanterelles, fontina cheese & black truffle oil', popular: true, image: 'Images/truffle_crostini.jpg' },
         { id: 's5', name: 'Prosciutto & Fig Burrata Tartine', price: '₹540', description: 'Italian burrata over sourdough with prosciutto di Parma, fresh figs & balsamic', popular: true, image: 'Images/burrata_tartine.jpg' },
         { id: 's6', name: 'Mediterranean Halloumi Sliders', price: '₹460', description: 'Grilled halloumi cheese on brioche with roasted red pepper hummus & arugula', popular: true, image: 'Images/halloumi_sliders.jpg' }
