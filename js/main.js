@@ -32,14 +32,14 @@
   const mobileOverlay = qs('.mobile-overlay');
 
   function openMobileNav() {
-    mobileNav.classList.add('open');
-    mobileOverlay.classList.add('active');
+    mobileNav?.classList.add('open');
+    mobileOverlay?.classList.add('active');
     document.body.style.overflow = 'hidden';
   }
 
   function closeMobileNav() {
-    mobileNav.classList.remove('open');
-    mobileOverlay.classList.remove('active');
+    mobileNav?.classList.remove('open');
+    mobileOverlay?.classList.remove('active');
     document.body.style.overflow = '';
   }
 
@@ -230,16 +230,30 @@
     const btn = contactForm.querySelector('button[type="submit"]');
     const originalText = btn ? btn.innerHTML : 'Send Inquiry';
 
-    // Gather form data
+    // Gather and validate form data
+    const name = qs('#guestName')?.value?.trim() || '';
+    const email = qs('#guestEmail')?.value?.trim() || '';
+    const phone = qs('#guestPhone')?.value?.trim() || '';
+    const date = qs('#reservationDate')?.value?.trim() || '';
+    const time = qs('#reservationTime')?.value?.trim() || '';
+    const guests = qs('#guestCount')?.value || '2 Guests';
+    const eventType = qs('#occasion')?.value || 'Casual Dining';
+    const message = qs('#guestMessage')?.value?.trim() || '';
+
+    if (!name || !email || !date || !time) {
+      alert('Please fill in your Name, Email, Date, and Time for the reservation.');
+      return;
+    }
+
     const formData = {
-      name: qs('#guestName')?.value,
-      email: qs('#guestEmail')?.value,
-      phone: qs('#guestPhone')?.value,
-      date: qs('#reservationDate')?.value,
-      time: qs('#reservationTime')?.value,
-      guests: qs('#guestCount')?.value,
-      eventType: qs('#occasion')?.value,
-      message: qs('#guestMessage')?.value
+      name,
+      email,
+      phone,
+      date,
+      time,
+      guests,
+      eventType,
+      message
     };
 
     if (btn) {
@@ -271,7 +285,7 @@
       }
     } catch (err) {
       console.error('Reservation API Error:', err);
-      alert('❌ Could not connect to backend server. Please make sure `npm start` is running in your terminal on port 5002!');
+      alert('❌ Could not connect to backend server. Please make sure `npm start` is running in your terminal!');
       if (btn) {
         btn.textContent = 'Connection Error ❌';
         btn.style.background = '#8b0000';
@@ -297,7 +311,7 @@
     const input = newsletterForm.querySelector('.newsletter-input');
     const originalText = btn ? btn.textContent : 'Join';
 
-    if (!input || !input.value) return;
+    if (!input || !input.value || !input.value.trim()) return;
 
     if (btn) {
       btn.disabled = true;
@@ -308,7 +322,7 @@
       const res = await fetch(`${getApiBaseUrl()}/api/newsletter`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: input.value })
+        body: JSON.stringify({ email: input.value.trim() })
       });
       const data = await res.json();
       if (res.ok && data.status === 'success') {
@@ -320,7 +334,7 @@
       }
     } catch (err) {
       console.error('Newsletter API Error:', err);
-      alert('❌ Could not connect to backend server. Please make sure `npm start` is running in your terminal on port 5002!');
+      alert('❌ Could not connect to backend server. Please make sure `npm start` is running in your terminal!');
       if (btn) btn.textContent = 'Error';
     } finally {
       setTimeout(() => {
@@ -335,14 +349,21 @@
   /* ─── Smooth Anchor Scroll ────────────────────── */
   qsa('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', e => {
-      const target = qs(anchor.getAttribute('href'));
-      if (target) {
-        e.preventDefault();
-        const offset = navbar ? navbar.offsetHeight + 20 : 80;
-        window.scrollTo({
-          top: target.offsetTop - offset,
-          behavior: 'smooth'
-        });
+      const href = anchor.getAttribute('href');
+      if (!href || href === '#' || href.length < 2) return;
+      try {
+        const target = qs(href);
+        if (target) {
+          e.preventDefault();
+          const offset = navbar ? navbar.offsetHeight + 20 : 80;
+          const targetTop = target.getBoundingClientRect().top + window.scrollY - offset;
+          window.scrollTo({
+            top: targetTop,
+            behavior: 'smooth'
+          });
+        }
+      } catch {
+        // Ignore invalid selector
       }
     });
   });

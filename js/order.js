@@ -118,21 +118,31 @@ window.addEventListener('scroll', () => {
 // ─── ORDER TYPE TOGGLE ───────────────────────────────────────────────────────
 function setOrderType(type) {
   state.orderType = type;
-  el.btnPickup.classList.toggle('active', type === 'pickup');
-  el.btnDelivery.classList.toggle('active', type === 'delivery');
+  el.btnPickup?.classList.toggle('active', type === 'pickup');
+  el.btnDelivery?.classList.toggle('active', type === 'delivery');
 
   // Sync cart sidebar badge
-  el.cartOrderTypeIcon.className = type === 'pickup'
-    ? 'fa-solid fa-store'
-    : 'fa-solid fa-motorcycle';
-  el.cartOrderTypeText.textContent = type === 'pickup' ? 'Pickup' : 'Delivery';
+  if (el.cartOrderTypeIcon) {
+    el.cartOrderTypeIcon.className = type === 'pickup'
+      ? 'fa-solid fa-store'
+      : 'fa-solid fa-motorcycle';
+  }
+  if (el.cartOrderTypeText) {
+    el.cartOrderTypeText.textContent = type === 'pickup' ? 'Pickup' : 'Delivery';
+  }
 
   // Toggle delivery fee visibility
-  el.deliveryFeeRow.hidden = type !== 'delivery';
+  if (el.deliveryFeeRow) el.deliveryFeeRow.hidden = type !== 'delivery';
 
   // Toggle address/time fields in checkout form
-  el.addressGroup.hidden = type !== 'delivery';
-  el.pickupTimeGroup.hidden = type !== 'pickup';
+  if (el.addressGroup) el.addressGroup.hidden = type !== 'delivery';
+  if (el.pickupTimeGroup) el.pickupTimeGroup.hidden = type !== 'pickup';
+
+  // Clear address error if switching to pickup
+  if (type === 'pickup' && el.addressError) {
+    el.addressError.textContent = '';
+    el.orderAddress?.classList.remove('error');
+  }
 
   updateCartTotals();
   showToast('info', type === 'pickup' ? 'Pickup Selected' : 'Delivery Selected',
@@ -233,8 +243,10 @@ const CATEGORY_ICONS = {
   'Savory Bites': 'fa-utensils'
 };
 
-function parsePrice(priceStr) {
-  return parseInt(priceStr.replace(/[^0-9]/g, ''), 10) || 0;
+function parsePrice(price) {
+  if (typeof price === 'number') return Math.round(price);
+  const cleaned = String(price || '').replace(/[^0-9.]/g, '');
+  return Math.round(parseFloat(cleaned)) || 0;
 }
 
 function renderMenu() {
@@ -687,6 +699,12 @@ document.addEventListener('keydown', e => {
   }
 });
 
+// Prevent form submit on Enter key inside inputs
+el.checkoutForm?.addEventListener('submit', e => {
+  e.preventDefault();
+  el.nextToReview?.click();
+});
+
 // Step 1 → Step 2
 el.nextToReview.addEventListener('click', () => {
   if (!validateForm()) return;
@@ -920,7 +938,8 @@ function showConfirmation() {
 function resetCart() {
   state.cart = [];
   state.placedOrder = null;
-  el.checkoutForm.reset();
+  el.checkoutForm?.reset();
+  if (el.specialInstructions) el.specialInstructions.value = '';
   syncCartUI();
   // Re-render all menu cards to remove qty controls
   renderMenu();
@@ -960,14 +979,16 @@ function formatCurrency(amount) {
 }
 
 function formatTime(timeStr) {
+  if (!timeStr || !timeStr.includes(':')) return 'ASAP';
   const [h, m] = timeStr.split(':').map(Number);
+  if (isNaN(h) || isNaN(m)) return 'ASAP';
   const period = h >= 12 ? 'PM' : 'AM';
   const hour = h % 12 || 12;
   return `${hour}:${String(m).padStart(2, '0')} ${period}`;
 }
 
 function escapeHtml(str) {
-  if (!str) return '';
+  if (str === null || str === undefined) return '';
   return String(str)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
