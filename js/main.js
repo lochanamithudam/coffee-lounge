@@ -441,7 +441,120 @@
     requestAnimationFrame(tick);
   })();
 
+  /* ─── Events & Experiences Filtering ───────────── */
+  const eventTabs = qsa('.events-tab-btn');
+  const eventCards = qsa('.event-card');
+
+  eventTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const filter = tab.dataset.filter;
+      eventTabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+
+      eventCards.forEach(card => {
+        const category = card.dataset.category;
+        if (filter === 'all' || category === filter) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    });
+  });
+
+  /* ─── Experience Modals Logic ────────────────────── */
+  function setupModal(triggerId, modalId, closeId) {
+    const trigger = qs(`#${triggerId}`);
+    const modal = qs(`#${modalId}`);
+    const closeBtn = qs(`#${closeId}`);
+
+    if (!trigger || !modal) return;
+
+    trigger.addEventListener('click', () => {
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+
+    const closeModal = () => {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    };
+
+    closeBtn?.addEventListener('click', closeModal);
+    modal.addEventListener('click', e => {
+      if (e.target === modal) closeModal();
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && modal.classList.contains('active')) {
+        closeModal();
+      }
+    });
+  }
+
+  setupModal('openStampCardBtn', 'stampCardModal', 'closeStampModal');
+  setupModal('openBrewConfigBtn', 'brewConfigModal', 'closeBrewModal');
+  setupModal('openEcoModalBtn', 'ecoModal', 'closeEcoModal');
+
+  /* ─── Digital Stamp Card Interaction ───────────── */
+  (function initStampCard() {
+    const testAddBtn = qs('#testAddStampBtn');
+    const stampCountEl = qs('#currentStampCount');
+    let currentStamps = 7;
+
+    testAddBtn?.addEventListener('click', () => {
+      if (currentStamps < 10) {
+        currentStamps++;
+        if (stampCountEl) stampCountEl.textContent = currentStamps;
+        const targetSlot = qs(`#slot${currentStamps}`);
+        if (targetSlot) {
+          targetSlot.classList.add('stamped');
+          targetSlot.innerHTML = '<i class="fa-solid fa-mug-hot"></i>';
+        }
+        if (currentStamps === 10) {
+          alert('🎉 Congratulations! You have unlocked your FREE Specialty Coffee Reward!');
+          testAddBtn.disabled = true;
+          testAddBtn.innerHTML = '<i class="fa-solid fa-gift"></i> Reward Unlocked!';
+        }
+      }
+    });
+  })();
+
+  /* ─── Brew Bar Customizer Interaction ──────────── */
+  (function initBrewConfigurator() {
+    let selectedBean = 'Ethiopian Yirgacheffe';
+    let selectedRoast = 'Light Roast';
+    let selectedMethod = 'V60 Pour-Over';
+
+    const recipePreview = qs('#brewRecipePreview');
+
+    function updateRecipe() {
+      if (recipePreview) {
+        recipePreview.textContent = `${selectedBean} · ${selectedRoast} via ${selectedMethod}`;
+      }
+    }
+
+    function setupPillGroup(groupId, callback) {
+      const container = qs(`#${groupId}`);
+      if (!container) return;
+      const pills = qsa('.brew-pill', container);
+      pills.forEach(pill => {
+        pill.addEventListener('click', () => {
+          pills.forEach(p => p.classList.remove('selected'));
+          pill.classList.add('selected');
+          callback(pill.dataset.value);
+          updateRecipe();
+        });
+      });
+    }
+
+    setupPillGroup('beanSelect', val => { selectedBean = val; });
+    setupPillGroup('roastSelect', val => { selectedRoast = val; });
+    setupPillGroup('methodSelect', val => { selectedMethod = val; });
+  })();
+
   console.log('%cCoffee Lounge — Fine Coffee & Lounge ☕',
     'color: #c9a84c; font-size: 14px; font-family: serif; padding: 4px 0;');
 
 })();
+

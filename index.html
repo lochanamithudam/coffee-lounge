@@ -983,13 +983,22 @@
                 <span class="tagline">Lounge Life</span>
                 <h2 id="eventsHeading" class="drift-text">Events &amp; Experiences</h2>
                 <div class="gold-rule" style="margin:16px auto;"></div>
-                <p>Beyond the cup — Coffee Lounge is a living, breathing venue where culture, music, and community come
-                    alive every week.</p>
+                <p>Beyond the cup — Coffee Lounge is a living, breathing venue where culture, work, music, and community come
+                    alive every day.</p>
+            </div>
+
+            <!-- Filter Category Pills -->
+            <div class="events-tabs-container reveal">
+                <button class="events-tab-btn active" data-filter="all">All Offerings</button>
+                <button class="events-tab-btn" data-filter="events"><i class="fa-regular fa-calendar-check"></i> Weekly Events</button>
+                <button class="events-tab-btn" data-filter="amenities"><i class="fa-solid fa-mug-hot"></i> Lounge Amenities &amp; Perks</button>
             </div>
 
             <div class="events-grid">
 
-                <div class="event-card reveal reveal-delay-1">
+                <!-- EXISTING EVENTS -->
+                <div class="event-card reveal reveal-delay-1" data-category="events">
+                    <span class="event-badge badge-gold">Live Performance</span>
                     <div class="event-icon">🎵</div>
                     <h3>Live Music Nights</h3>
                     <p>Immerse yourself in soulful acoustic performances every Friday and Saturday evening. Jazz, indie,
@@ -997,7 +1006,8 @@
                     <span class="event-schedule">Every Fri &amp; Sat · 7:00 PM – 10:00 PM</span>
                 </div>
 
-                <div class="event-card reveal reveal-delay-2">
+                <div class="event-card reveal reveal-delay-2" data-category="events">
+                    <span class="event-badge badge-gold">Community Stage</span>
                     <div class="event-icon">🎤</div>
                     <h3>Open Mic Sessions</h3>
                     <p>A stage for storytellers, poets, and musicians. Open mic nights celebrate raw talent in an
@@ -1005,7 +1015,8 @@
                     <span class="event-schedule">Every Wednesday · 6:30 PM</span>
                 </div>
 
-                <div class="event-card reveal reveal-delay-3">
+                <div class="event-card reveal reveal-delay-3" data-category="events">
+                    <span class="event-badge badge-gold">Masterclass</span>
                     <div class="event-icon">☕</div>
                     <h3>Coffee Tasting Workshop</h3>
                     <p>Journey through origins with our head barista. Learn to detect tasting notes, master brewing
@@ -1013,7 +1024,8 @@
                     <span class="event-schedule">Every Sunday · 10:00 AM · Limited Seats</span>
                 </div>
 
-                <div class="event-card reveal reveal-delay-4">
+                <div class="event-card reveal reveal-delay-4" data-category="events">
+                    <span class="event-badge badge-gold">Exclusive Space</span>
                     <div class="event-icon">🏛</div>
                     <h3>Private Bookings</h3>
                     <p>Transform Coffee Lounge into your exclusive venue. Ideal for corporate gatherings, celebrations,
@@ -1021,10 +1033,66 @@
                     <span class="event-schedule">Available 7 Days · Enquire for Details</span>
                 </div>
 
+                <!-- 6 NEW REQUESTED UNCOMMON & COMMON FEATURES -->
+
+                <!-- 1. Wi-Fi & Workspaces -->
+                <div class="event-card reveal reveal-delay-1" data-category="amenities">
+                    <span class="event-badge badge-gold">Remote Work Ready</span>
+                    <div class="event-icon"><i class="fa-solid fa-wifi"></i></div>
+                    <h3>High-Speed Wi-Fi &amp; Workspaces</h3>
+                    <p>High-speed fiber Wi-Fi and easily accessible power sockets at every seating booth, offering an inspiring, comfortable working environment for remote workers and students.</p>
+                    <span class="event-schedule"><i class="fa-solid fa-bolt"></i> Power Outlets · Fiber Speeds</span>
+                </div>
+
+                <!-- 2. Online Pre-Order & Takeaway / Delivery -->
+                <div class="event-card reveal reveal-delay-2" data-category="amenities">
+                    <span class="event-badge badge-gold">Instant Order</span>
+                    <div class="event-icon"><i class="fa-solid fa-bag-shopping"></i></div>
+                    <h3>Online Pre-Order &amp; Delivery</h3>
+                    <p>Enjoy the ultimate convenience of placing orders online in advance for direct takeaway, quick curbside pickup, or seamless home delivery right to your door.</p>
+                    <a href="order.html" class="event-action-btn"><i class="fa-solid fa-cart-shopping"></i> Pre-Order Now &rarr;</a>
+                </div>
+
+                <!-- 3. Digital Loyalty Stamp Card -->
+                <div class="event-card reveal reveal-delay-3" data-category="amenities">
+                    <span class="event-badge badge-gold">Guest Rewards</span>
+                    <div class="event-icon"><i class="fa-solid fa-stamp"></i></div>
+                    <h3>Loyalty &amp; Stamp Program</h3>
+                    <p>Earn digital stamps with every purchase through our digital reward system. Collect stamps per cup and receive a free signature specialty coffee after every 5 to 10 purchases.</p>
+                    <button type="button" class="event-action-btn" id="openStampCardBtn"><i class="fa-solid fa-qrcode"></i> View Digital Stamp Card</button>
+                </div>
+
+                <!-- 4. Create Your Own Brew Bar -->
+                <div class="event-card reveal reveal-delay-4" data-category="amenities">
+                    <span class="event-badge badge-gold">Signature Bar</span>
+                    <div class="event-icon"><i class="fa-solid fa-flask"></i></div>
+                    <h3>"Create Your Own Brew" Bar</h3>
+                    <p>Customize your cup by choosing your favorite single-origin coffee beans, custom roast profile, and manual pour-over brewing method (V60, French Press, AeroPress, or Cold Drip).</p>
+                    <button type="button" class="event-action-btn" id="openBrewConfigBtn"><i class="fa-solid fa-sliders"></i> Customize Your Brew</button>
+                </div>
+
+                <!-- 5. Mini Library & Board Games Lounge -->
+                <div class="event-card reveal reveal-delay-1" data-category="amenities">
+                    <span class="event-badge badge-gold">Quiet Lounge</span>
+                    <div class="event-icon"><i class="fa-solid fa-book-open"></i></div>
+                    <h3>Mini Library &amp; Board Games</h3>
+                    <p>A cozy relaxation corner featuring a curated mini book-swap library to read while sipping coffee, alongside classic board games (Chess, Scrabble, Catan) to enjoy with friends.</p>
+                    <span class="event-schedule"><i class="fa-solid fa-chess"></i> Chess, Scrabble, Catan · Free Access</span>
+                </div>
+
+                <!-- 6. BYO Mug Discount & Spent Grounds Corner -->
+                <div class="event-card reveal reveal-delay-2" data-category="amenities">
+                    <span class="event-badge badge-green">Eco Initiative</span>
+                    <div class="event-icon"><i class="fa-solid fa-leaf"></i></div>
+                    <h3>BYO Mug Discount &amp; Eco Corner</h3>
+                    <p>A green sustainability initiative offering a 10% discount for guests who bring reusable mugs, plus complimentary bagged spent coffee grounds to take home for garden compost.</p>
+                    <button type="button" class="event-action-btn" id="openEcoModalBtn"><i class="fa-solid fa-seedling"></i> Eco Green Details</button>
+                </div>
+
             </div>
 
             <div style="text-align:center;margin-top:50px;" class="reveal">
-                <a href="#contact" class="btn-primary">Enquire About Events</a>
+                <a href="#contact" class="btn-primary">Enquire About Events &amp; Lounge Reservations</a>
             </div>
         </div>
     </section>
@@ -1581,6 +1649,120 @@
         </div>
 
     </footer>
+
+    <!-- ================================================
+     EXPERIENCE MODALS
+     ================================================ -->
+
+    <!-- Digital Stamp Card Modal -->
+    <div class="experience-modal" id="stampCardModal" role="dialog" aria-modal="true" aria-labelledby="stampCardTitle">
+        <div class="experience-modal-content">
+            <button class="experience-modal-close" id="closeStampModal" aria-label="Close modal">&times;</button>
+            <div style="text-align:center;">
+                <span class="tagline" style="color:var(--gold);">Loyalty Rewards</span>
+                <h3 id="stampCardTitle" style="font-family:var(--font-display);font-size:1.6rem;color:var(--cream);margin-top:6px;">Digital Stamp Card</h3>
+                <p style="font-size:0.85rem;color:var(--text-muted);margin-top:8px;">Every cup brings you closer to a free handcrafted specialty brew! Collect 10 stamps.</p>
+            </div>
+
+            <div class="stamp-card-container">
+                <div class="stamp-card-header">
+                    <span class="stamp-member-id">Member #CL-8942</span>
+                    <span class="stamp-count-text"><strong id="currentStampCount">7</strong> / 10 Stamps</span>
+                </div>
+                <div class="stamp-card-grid">
+                    <div class="stamp-slot stamped"><i class="fa-solid fa-mug-hot"></i></div>
+                    <div class="stamp-slot stamped"><i class="fa-solid fa-mug-hot"></i></div>
+                    <div class="stamp-slot stamped"><i class="fa-solid fa-mug-hot"></i></div>
+                    <div class="stamp-slot stamped"><i class="fa-solid fa-mug-hot"></i></div>
+                    <div class="stamp-slot stamped"><i class="fa-solid fa-mug-hot"></i></div>
+                    <div class="stamp-slot stamped"><i class="fa-solid fa-mug-hot"></i></div>
+                    <div class="stamp-slot stamped"><i class="fa-solid fa-mug-hot"></i></div>
+                    <div class="stamp-slot" id="slot8"><i class="fa-regular fa-circle"></i></div>
+                    <div class="stamp-slot" id="slot9"><i class="fa-regular fa-circle"></i></div>
+                    <div class="stamp-slot free-reward" id="slot10"><i class="fa-solid fa-gift"></i><span style="font-size:0.5rem;display:block;margin-top:2px;">FREE</span></div>
+                </div>
+                <div class="stamp-card-actions">
+                    <button type="button" class="btn-primary" id="testAddStampBtn" style="width:100%;font-size:0.8rem;padding:12px;"><i class="fa-solid fa-plus"></i> Simulate Earning a Stamp</button>
+                    <p style="font-size:0.7rem;color:var(--text-muted);text-align:center;margin-top:10px;">Show your digital QR code at checkout during order pickup or lounge visit.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Your Own Brew Bar Modal -->
+    <div class="experience-modal" id="brewConfigModal" role="dialog" aria-modal="true" aria-labelledby="brewModalTitle">
+        <div class="experience-modal-content">
+            <button class="experience-modal-close" id="closeBrewModal" aria-label="Close modal">&times;</button>
+            <div style="text-align:center;margin-bottom:20px;">
+                <span class="tagline" style="color:var(--gold);">Custom Coffee Bar</span>
+                <h3 id="brewModalTitle" style="font-family:var(--font-display);font-size:1.6rem;color:var(--cream);margin-top:6px;">Create Your Own Brew</h3>
+                <p style="font-size:0.85rem;color:var(--text-muted);margin-top:6px;">Tailor every nuance of your coffee — origin, roast profile, and pour-over technique.</p>
+            </div>
+
+            <div class="brew-configurator">
+                <div class="brew-option-group">
+                    <label><i class="fa-solid fa-earth-americas" style="color:var(--gold);"></i> 1. Select Single-Origin Beans</label>
+                    <div class="brew-pill-select" id="beanSelect">
+                        <button type="button" class="brew-pill selected" data-value="Ethiopian Yirgacheffe">Ethiopian Yirgacheffe (Floral &amp; Citrus)</button>
+                        <button type="button" class="brew-pill" data-value="Colombian Supremo">Colombian Supremo (Nutty &amp; Chocolate)</button>
+                        <button type="button" class="brew-pill" data-value="Guatemala Huehuetenango">Guatemala (Toffee &amp; Apple)</button>
+                        <button type="button" class="brew-pill" data-value="Sumatra Mandheling">Sumatra (Earthy &amp; Spice)</button>
+                    </div>
+                </div>
+
+                <div class="brew-option-group">
+                    <label><i class="fa-solid fa-fire" style="color:var(--gold);"></i> 2. Choose Roast Profile</label>
+                    <div class="brew-pill-select" id="roastSelect">
+                        <button type="button" class="brew-pill selected" data-value="Light Roast">Light Roast (Bright Acidity)</button>
+                        <button type="button" class="brew-pill" data-value="Medium Roast">Medium Roast (Balanced Caramel)</button>
+                        <button type="button" class="brew-pill" data-value="Dark Roast">Dark Roast (Full-Bodied &amp; Smoky)</button>
+                    </div>
+                </div>
+
+                <div class="brew-option-group">
+                    <label><i class="fa-solid fa-filter" style="color:var(--gold);"></i> 3. Choose Manual Brewing Method</label>
+                    <div class="brew-pill-select" id="methodSelect">
+                        <button type="button" class="brew-pill selected" data-value="V60 Pour-Over">V60 Pour-Over</button>
+                        <button type="button" class="brew-pill" data-value="French Press">French Press</button>
+                        <button type="button" class="brew-pill" data-value="AeroPress">AeroPress</button>
+                        <button type="button" class="brew-pill" data-value="Cold Drip">Cold Drip (Slow Extraction)</button>
+                    </div>
+                </div>
+
+                <div class="brew-summary-box">
+                    <div style="font-size:0.75rem;color:var(--gold);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;">Your Signature Recipe:</div>
+                    <div id="brewRecipePreview" style="font-family:var(--font-display);font-size:1.1rem;color:var(--cream);">Ethiopian Yirgacheffe · Light Roast via V60 Pour-Over</div>
+                </div>
+
+                <div style="margin-top:20px;">
+                    <a href="order.html" class="btn-primary" style="display:block;text-align:center;"><i class="fa-solid fa-check"></i> Order This Custom Brew Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Eco Initiative Modal -->
+    <div class="experience-modal" id="ecoModal" role="dialog" aria-modal="true" aria-labelledby="ecoModalTitle">
+        <div class="experience-modal-content">
+            <button class="experience-modal-close" id="closeEcoModal" aria-label="Close modal">&times;</button>
+            <div style="text-align:center;margin-bottom:20px;">
+                <span class="tagline" style="color:#81c784;">Sustainability</span>
+                <h3 id="ecoModalTitle" style="font-family:var(--font-display);font-size:1.6rem;color:var(--cream);margin-top:6px;">Green Lounge Initiatives</h3>
+                <p style="font-size:0.85rem;color:var(--text-muted);margin-top:6px;">Join our commitment to zero-waste coffee culture.</p>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:18px;">
+                <div style="background:rgba(46,125,50,0.12);border:1px solid rgba(76,175,80,0.3);padding:18px;border-radius:6px;">
+                    <h4 style="color:#81c784;font-family:var(--font-display);font-size:1.1rem;margin-bottom:6px;"><i class="fa-solid fa-mug-saucer"></i> Bring Your Own Mug (BYO) Discount</h4>
+                    <p style="font-size:0.82rem;color:var(--text-muted);line-height:1.6;">Bring any clean reusable tumbler or mug to Coffee Lounge and receive an instant <strong>10% discount</strong> on every handcrafted beverage.</p>
+                </div>
+                <div style="background:rgba(46,125,50,0.12);border:1px solid rgba(76,175,80,0.3);padding:18px;border-radius:6px;">
+                    <h4 style="color:#81c784;font-family:var(--font-display);font-size:1.1rem;margin-bottom:6px;"><i class="fa-solid fa-seedling"></i> Free Spent Coffee Grounds for Garden Compost</h4>
+                    <p style="font-size:0.82rem;color:var(--text-muted);line-height:1.6;">Nitrogen-rich spent espresso grounds are freshly bagged daily and available at our Eco Corner for all guests to take home for garden soil enrichment, pest deterrence, and composting — completely free!</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- ================================================
      SCRIPTS
