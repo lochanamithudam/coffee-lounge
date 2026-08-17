@@ -1768,7 +1768,7 @@
      CUSTOM BREW ORDER COMPOSER — NEW SEPARATE INTERFACE
      ================================================ -->
     <div class="experience-modal" id="brewOrderModal" role="dialog" aria-modal="true" aria-labelledby="brewOrderTitle">
-        <div class="experience-modal-content brew-order-composer">
+        <div class="experience-modal-content brew-order-composer" role="document">
             <button class="experience-modal-close" id="closeBrewOrderModal" aria-label="Close">&times;</button>
 
             <!-- Composer Header -->
@@ -1845,6 +1845,11 @@
                     <textarea id="brewOrderNotes" name="notes" rows="2" placeholder="e.g. Extra hot, no sugar, oat milk instead..."></textarea>
                 </div>
 
+            </form>
+
+            <!-- ★ STICKY FOOTER — always visible, never scrolls away ★ -->
+            <div class="brew-order-footer">
+
                 <!-- Order Summary Strip -->
                 <div class="brew-order-summary">
                     <div class="brew-order-summary-row">
@@ -1859,7 +1864,7 @@
                 </div>
 
                 <!-- Submit Button -->
-                <button type="submit" class="brew-order-submit-btn" id="brewOrderSubmitBtn">
+                <button type="submit" form="brewOrderForm" class="brew-order-submit-btn" id="brewOrderSubmitBtn">
                     <i class="fa-solid fa-paper-plane"></i>
                     <span>Send Order &amp; Get Confirmation Email</span>
                 </button>
@@ -1867,7 +1872,7 @@
                 <!-- Success / Error feedback -->
                 <div class="brew-order-feedback" id="brewOrderFeedback" style="display:none;"></div>
 
-            </form>
+            </div>
         </div>
     </div>
 
