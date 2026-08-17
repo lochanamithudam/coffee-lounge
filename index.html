@@ -1735,7 +1735,7 @@
                 </div>
 
                 <div style="margin-top:20px;">
-                    <a href="order.html" class="btn-primary" style="display:block;text-align:center;"><i class="fa-solid fa-check"></i> Order This Custom Brew Now</a>
+                    <button type="button" id="openBrewOrderBtn" class="btn-primary" style="display:block;width:100%;text-align:center;cursor:pointer;"><i class="fa-solid fa-envelope-open-text"></i> Order This Custom Brew Now</button>
                 </div>
             </div>
         </div>
@@ -1761,6 +1761,113 @@
                     <p style="font-size:0.82rem;color:var(--text-muted);line-height:1.6;">Nitrogen-rich spent espresso grounds are freshly bagged daily and available at our Eco Corner for all guests to take home for garden soil enrichment, pest deterrence, and composting — completely free!</p>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- ================================================
+     CUSTOM BREW ORDER COMPOSER — NEW SEPARATE INTERFACE
+     ================================================ -->
+    <div class="experience-modal" id="brewOrderModal" role="dialog" aria-modal="true" aria-labelledby="brewOrderTitle">
+        <div class="experience-modal-content brew-order-composer">
+            <button class="experience-modal-close" id="closeBrewOrderModal" aria-label="Close">&times;</button>
+
+            <!-- Composer Header -->
+            <div class="brew-order-header">
+                <div class="brew-order-header-icon"><i class="fa-solid fa-mug-hot"></i></div>
+                <div>
+                    <span class="tagline" style="color:var(--gold);font-size:0.72rem;">Custom Brew Order</span>
+                    <h3 id="brewOrderTitle">Place Your Signature Order</h3>
+                    <p>Your handcrafted recipe is ready. Fill in your details and we'll confirm your order by email.</p>
+                </div>
+            </div>
+
+            <!-- Auto-filled Recipe Card -->
+            <div class="brew-order-recipe-card">
+                <div class="brew-order-recipe-label"><i class="fa-solid fa-flask"></i> Your Signature Recipe</div>
+                <div class="brew-order-recipe-text" id="brewOrderRecipeDisplay">Ethiopian Yirgacheffe · Light Roast via V60 Pour-Over</div>
+                <div class="brew-order-recipe-meta">
+                    <span id="brewOrderBean"><i class="fa-solid fa-earth-americas"></i> Ethiopian Yirgacheffe</span>
+                    <span id="brewOrderRoast"><i class="fa-solid fa-fire"></i> Light Roast</span>
+                    <span id="brewOrderMethod"><i class="fa-solid fa-filter"></i> V60 Pour-Over</span>
+                </div>
+            </div>
+
+            <!-- Order Form -->
+            <form id="brewOrderForm" class="brew-order-form" novalidate>
+
+                <div class="brew-order-section-label"><i class="fa-solid fa-user"></i> Your Details</div>
+
+                <div class="brew-order-row">
+                    <div class="brew-order-field">
+                        <label for="brewOrderName">Full Name <span class="req">*</span></label>
+                        <input type="text" id="brewOrderName" name="name" placeholder="e.g. Lochana Mithudam" required autocomplete="name" />
+                    </div>
+                    <div class="brew-order-field">
+                        <label for="brewOrderPhone">Phone Number <span class="req">*</span></label>
+                        <input type="tel" id="brewOrderPhone" name="phone" placeholder="e.g. +94 71 234 5678" required autocomplete="tel" />
+                    </div>
+                </div>
+
+                <div class="brew-order-field">
+                    <label for="brewOrderEmail">Email Address <span class="req">*</span></label>
+                    <input type="email" id="brewOrderEmail" name="email" placeholder="e.g. you@email.com" required autocomplete="email" />
+                    <small>Your order confirmation will be sent here.</small>
+                </div>
+
+                <div class="brew-order-section-label" style="margin-top:18px;"><i class="fa-solid fa-bag-shopping"></i> Order Preferences</div>
+
+                <div class="brew-order-row">
+                    <div class="brew-order-field">
+                        <label for="brewOrderType">Order Type</label>
+                        <select id="brewOrderType" name="orderType">
+                            <option value="pickup">🏪 Pickup / Takeaway</option>
+                            <option value="dine-in">☕ Dine In (Lounge)</option>
+                            <option value="delivery">🛵 Home Delivery</option>
+                        </select>
+                    </div>
+                    <div class="brew-order-field">
+                        <label for="brewOrderQty">Quantity</label>
+                        <div class="brew-qty-control">
+                            <button type="button" id="brewQtyMinus" aria-label="Decrease quantity"><i class="fa-solid fa-minus"></i></button>
+                            <span id="brewQtyDisplay">1</span>
+                            <button type="button" id="brewQtyPlus" aria-label="Increase quantity"><i class="fa-solid fa-plus"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="brew-order-field" id="brewDeliveryAddressWrap" style="display:none;">
+                    <label for="brewDeliveryAddress">Delivery Address <span class="req">*</span></label>
+                    <input type="text" id="brewDeliveryAddress" name="address" placeholder="Enter your full delivery address" />
+                </div>
+
+                <div class="brew-order-field">
+                    <label for="brewOrderNotes">Special Instructions <span style="font-size:0.75rem;color:var(--text-muted);">(optional)</span></label>
+                    <textarea id="brewOrderNotes" name="notes" rows="2" placeholder="e.g. Extra hot, no sugar, oat milk instead..."></textarea>
+                </div>
+
+                <!-- Order Summary Strip -->
+                <div class="brew-order-summary">
+                    <div class="brew-order-summary-row">
+                        <span>Custom Brew <span id="brewSummaryRecipeShort">Ethiopian × Light × V60</span></span>
+                        <span>× <span id="brewSummaryQty">1</span></span>
+                        <span class="brew-order-price">LKR 850</span>
+                    </div>
+                    <div class="brew-order-summary-total">
+                        <span>Total</span>
+                        <span class="brew-order-total-val" id="brewOrderTotal">LKR 850</span>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="brew-order-submit-btn" id="brewOrderSubmitBtn">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    <span>Send Order &amp; Get Confirmation Email</span>
+                </button>
+
+                <!-- Success / Error feedback -->
+                <div class="brew-order-feedback" id="brewOrderFeedback" style="display:none;"></div>
+
+            </form>
         </div>
     </div>
 

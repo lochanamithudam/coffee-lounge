@@ -520,18 +520,28 @@
     });
   })();
 
-  /* ─── Brew Bar Customizer Interaction ──────────── */
+  /* ─── Brew Bar Customizer & Order Composer ──────── */
   (function initBrewConfigurator() {
-    let selectedBean = 'Ethiopian Yirgacheffe';
-    let selectedRoast = 'Light Roast';
+    let selectedBean   = 'Ethiopian Yirgacheffe';
+    let selectedRoast  = 'Light Roast';
     let selectedMethod = 'V60 Pour-Over';
+    const BREW_PRICE   = 850;
 
     const recipePreview = qs('#brewRecipePreview');
 
-    function updateRecipe() {
-      if (recipePreview) {
-        recipePreview.textContent = `${selectedBean} · ${selectedRoast} via ${selectedMethod}`;
-      }
+    // Sync recipe text everywhere
+    function syncRecipe() {
+      const text = `${selectedBean} · ${selectedRoast} via ${selectedMethod}`;
+      if (recipePreview)                        recipePreview.textContent = text;
+      const od = qs('#brewOrderRecipeDisplay'); if (od) od.textContent = text;
+      const ob = qs('#brewOrderBean');          if (ob) ob.innerHTML = `<i class="fa-solid fa-earth-americas"></i> ${selectedBean}`;
+      const or = qs('#brewOrderRoast');         if (or) or.innerHTML = `<i class="fa-solid fa-fire"></i> ${selectedRoast}`;
+      const om = qs('#brewOrderMethod');        if (om) om.innerHTML = `<i class="fa-solid fa-filter"></i> ${selectedMethod}`;
+      // Short labels in summary
+      const bShort = selectedBean.split(' ')[0];
+      const rShort = selectedRoast.split(' ')[0];
+      const mShort = selectedMethod.split(' ')[0];
+      const sr = qs('#brewSummaryRecipeShort'); if (sr) sr.textContent = `${bShort} × ${rShort} × ${mShort}`;
     }
 
     function setupPillGroup(groupId, callback) {
@@ -543,14 +553,180 @@
           pills.forEach(p => p.classList.remove('selected'));
           pill.classList.add('selected');
           callback(pill.dataset.value);
-          updateRecipe();
+          syncRecipe();
         });
       });
     }
 
-    setupPillGroup('beanSelect', val => { selectedBean = val; });
-    setupPillGroup('roastSelect', val => { selectedRoast = val; });
+    setupPillGroup('beanSelect',   val => { selectedBean   = val; });
+    setupPillGroup('roastSelect',  val => { selectedRoast  = val; });
     setupPillGroup('methodSelect', val => { selectedMethod = val; });
+
+    /* ── Open Brew Order Composer from brew modal ───── */
+    const openBrewOrderBtn = qs('#openBrewOrderBtn');
+    const brewOrderModal   = qs('#brewOrderModal');
+    const closeBrewOrderBtn = qs('#closeBrewOrderModal');
+
+    openBrewOrderBtn?.addEventListener('click', () => {
+      syncRecipe();
+      // close the config modal first
+      qs('#brewConfigModal')?.classList.remove('active');
+      document.body.style.overflow = 'hidden';
+      // small delay so transition feels clean
+      setTimeout(() => {
+        brewOrderModal?.classList.add('active');
+      }, 180);
+    });
+
+    const closeBrewOrder = () => {
+      brewOrderModal?.classList.remove('active');
+      document.body.style.overflow = '';
+    };
+
+    closeBrewOrderBtn?.addEventListener('click', closeBrewOrder);
+    brewOrderModal?.addEventListener('click', e => {
+      if (e.target === brewOrderModal) closeBrewOrder();
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && brewOrderModal?.classList.contains('active')) {
+        closeBrewOrder();
+      }
+    });
+
+    /* ── Quantity Controls ───────────────────────────── */
+    let brewQty = 1;
+
+    function updateQtyDisplay() {
+      const disp = qs('#brewQtyDisplay');
+      const sq   = qs('#brewSummaryQty');
+      const tot  = qs('#brewOrderTotal');
+      if (disp) disp.textContent = brewQty;
+      if (sq)   sq.textContent   = brewQty;
+      if (tot)  tot.textContent  = `LKR ${(BREW_PRICE * brewQty).toLocaleString()}`;
+    }
+
+    qs('#brewQtyMinus')?.addEventListener('click', () => {
+      if (brewQty > 1) { brewQty--; updateQtyDisplay(); }
+    });
+
+    qs('#brewQtyPlus')?.addEventListener('click', () => {
+      if (brewQty < 10) { brewQty++; updateQtyDisplay(); }
+    });
+
+    /* ── Delivery address toggle ─────────────────────── */
+    qs('#brewOrderType')?.addEventListener('change', function () {
+      const wrap = qs('#brewDeliveryAddressWrap');
+      if (wrap) wrap.style.display = this.value === 'delivery' ? 'flex' : 'none';
+    });
+
+    /* ── Form Submit → API → Email Confirmation ─────── */
+    const brewForm     = qs('#brewOrderForm');
+    const feedback     = qs('#brewOrderFeedback');
+    const submitBtn    = qs('#brewOrderSubmitBtn');
+
+    function showFeedback(msg, type) {
+      if (!feedback) return;
+      feedback.className = `brew-order-feedback ${type}`;
+      feedback.innerHTML = msg;
+      feedback.style.display = 'block';
+    }
+
+    function getApiBase() {
+      const h = window.location.hostname;
+      if (h !== 'localhost' && h !== '127.0.0.1' && !window.location.protocol.startsWith('file')) return '';
+      if (['5000','5001','5002'].includes(window.location.port)) return '';
+      return 'http://localhost:5000';
+    }
+
+    brewForm?.addEventListener('submit', async e => {
+      e.preventDefault();
+
+      const name   = qs('#brewOrderName')?.value?.trim();
+      const email  = qs('#brewOrderEmail')?.value?.trim();
+      const phone  = qs('#brewOrderPhone')?.value?.trim();
+      const type   = qs('#brewOrderType')?.value || 'pickup';
+      const addr   = qs('#brewDeliveryAddress')?.value?.trim() || '';
+      const notes  = qs('#brewOrderNotes')?.value?.trim() || '';
+
+      // Validation
+      if (!name || !email || !phone) {
+        showFeedback('⚠️ Please fill in your name, email, and phone number.', 'error');
+        return;
+      }
+      if (type === 'delivery' && !addr) {
+        showFeedback('⚠️ Please enter a delivery address.', 'error');
+        return;
+      }
+
+      // Build order payload matching existing /api/orders schema
+      const recipe  = `${selectedBean} · ${selectedRoast} via ${selectedMethod}`;
+      const lineTotal = `LKR ${BREW_PRICE.toLocaleString()}`;
+      const totalAmt  = `LKR ${(BREW_PRICE * brewQty).toLocaleString()}`;
+
+      const payload = {
+        name, email, phone,
+        orderType: type,
+        address: addr || null,
+        pickupTime: null,
+        notes,
+        specialInstructions: recipe,
+        items: [{
+          name: `Custom Brew — ${recipe}`,
+          qty: brewQty,
+          lineTotal
+        }],
+        subtotal: totalAmt,
+        deliveryFee: type === 'delivery' ? 'LKR 150' : 'LKR 0',
+        taxes: 'LKR 0',
+        total: type === 'delivery'
+          ? `LKR ${(BREW_PRICE * brewQty + 150).toLocaleString()}`
+          : totalAmt
+      };
+
+      // Disable button, show loading
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Placing Order…</span>';
+      }
+      if (feedback) feedback.style.display = 'none';
+
+      try {
+        const res  = await fetch(`${getApiBase()}/api/orders`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+
+        if (res.ok && data.status === 'success') {
+          showFeedback(
+            `<strong>🎉 Order Placed! Confirmation email sent to <em>${email}</em>.</strong><br>
+             <span style="font-size:0.8rem;">Order ID: ${data.order?.id || '—'} &nbsp;|&nbsp; Recipe: ${recipe}</span>`,
+            'success'
+          );
+          brewForm.reset();
+          brewQty = 1;
+          updateQtyDisplay();
+          if (submitBtn) {
+            submitBtn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Order Sent!</span>';
+          }
+          // Auto-close after 4s
+          setTimeout(() => { closeBrewOrder(); }, 4200);
+        } else {
+          throw new Error(data.message || 'Order failed.');
+        }
+      } catch (err) {
+        showFeedback(
+          `❌ ${err.message || 'Could not place order.'}<br><small>Make sure the server is running (<code>npm start</code>) or try again.</small>`,
+          'error'
+        );
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>Send Order &amp; Get Confirmation Email</span>';
+        }
+      }
+    });
+
   })();
 
   console.log('%cCoffee Lounge — Fine Coffee & Lounge ☕',
