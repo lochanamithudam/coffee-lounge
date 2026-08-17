@@ -1568,34 +1568,38 @@ ul {
 /* ============================================
    BREW ORDER COMPOSER MODAL
    ============================================ */
-.brew-order-composer {
-  max-width: 600px !important;
+.experience-modal-content.brew-order-composer {
+  max-width: 580px !important;
+  width: 95% !important;
+  height: 88vh !important;
+  max-height: 720px !important;
   padding: 0 !important;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  max-height: 92vh;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  box-sizing: border-box !important;
 }
 
 /* Header Banner */
 .brew-order-header {
+  flex-shrink: 0 !important;
   display: flex;
   align-items: center;
   gap: 16px;
   background: linear-gradient(135deg, rgba(201, 168, 76, 0.18) 0%, rgba(30, 16, 6, 0.6) 100%);
   border-bottom: 1px solid rgba(201, 168, 76, 0.3);
-  padding: 22px 28px;
+  padding: 18px 24px;
 }
 
 .brew-order-header-icon {
-  width: 52px;
-  height: 52px;
+  width: 46px;
+  height: 46px;
   border-radius: 50%;
   border: 2px solid var(--gold);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.4rem;
+  font-size: 1.25rem;
   color: var(--gold);
   flex-shrink: 0;
   background: rgba(201, 168, 76, 0.1);
@@ -1603,54 +1607,55 @@ ul {
 
 .brew-order-header h3 {
   font-family: var(--font-display);
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   color: var(--cream);
-  margin: 4px 0 4px;
+  margin: 2px 0 2px;
   font-weight: 500;
 }
 
 .brew-order-header p {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: var(--text-muted);
   margin: 0;
-  line-height: 1.5;
+  line-height: 1.4;
 }
 
 /* Recipe Summary Card */
 .brew-order-recipe-card {
+  flex-shrink: 0 !important;
   background: rgba(201, 168, 76, 0.07);
   border-bottom: 1px solid rgba(201, 168, 76, 0.2);
-  padding: 14px 28px;
+  padding: 12px 24px;
 }
 
 .brew-order-recipe-label {
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   text-transform: uppercase;
   letter-spacing: 0.15em;
   color: var(--gold);
-  margin-bottom: 4px;
+  margin-bottom: 3px;
 }
 
 .brew-order-recipe-text {
   font-family: var(--font-display);
-  font-size: 1.05rem;
+  font-size: 1rem;
   color: var(--cream);
   font-weight: 500;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .brew-order-recipe-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 6px;
 }
 
 .brew-order-recipe-meta span {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   background: rgba(201, 168, 76, 0.12);
   border: 1px solid rgba(201, 168, 76, 0.3);
   color: var(--gold);
-  padding: 3px 10px;
+  padding: 2px 9px;
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -1658,14 +1663,16 @@ ul {
 }
 
 /* Form scrollable body */
-.brew-order-form {
-  padding: 18px 28px 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 13px;
-  overflow-y: auto;
-  flex: 1;
-  min-height: 0;
+.experience-modal-content.brew-order-composer .brew-order-form {
+  padding: 16px 24px 12px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
 }
 
 .brew-order-section-label {
@@ -1827,14 +1834,17 @@ ul {
 }
 
 /* Sticky Footer — always pinned at bottom, never scrolls away */
-.brew-order-footer {
-  flex-shrink: 0;
-  border-top: 1px solid rgba(201, 168, 76, 0.2);
-  background: linear-gradient(to top, rgba(10, 5, 2, 0.95) 80%, rgba(18, 9, 4, 0.6));
-  padding: 14px 24px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+.experience-modal-content.brew-order-composer .brew-order-footer {
+  flex-shrink: 0 !important;
+  border-top: 1px solid rgba(201, 168, 76, 0.3) !important;
+  background: #140904 !important;
+  padding: 12px 24px 16px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  box-sizing: border-box !important;
+  position: relative !important;
+  z-index: 10 !important;
 }
 
 /* Submit Button */
