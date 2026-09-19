@@ -10,7 +10,8 @@
     "lint:fix": "npx eslint . --fix",
     "lint:report": "npx eslint . --format html -o eslint-report.html",
     "lint:css": "npx stylelint \"css/**/*.css\"",
-    "lint:css:fix": "npx stylelint \"css/**/*.css\" --fix"
+    "lint:css:fix": "npx stylelint \"css/**/*.css\" --fix",
+    "lint:html": "npx htmlhint index.html order.html"
   },
   "dependencies": {
     "cors": "^2.8.6",

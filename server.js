@@ -384,21 +384,131 @@ app.post('/api/reservations', reservationLimiter, async (req, res) => {
       const mailOptions = {
         from: `"Coffee Lounge" <${process.env.EMAIL_USER}>`,
         to: reservationData.email,
-        subject: '☕ Reservation Confirmation - Coffee Lounge',
+        subject: '✨ Your Table is Reserved - The Coffee Lounge',
         html: `
-          <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
-            <h2 style="color: #c9a84c;">Table Reservation Confirmed!</h2>
-            <p>Dear <strong>${reservationData.name}</strong>,</p>
-            <p>Thank you for choosing Coffee Lounge. We are delighted to confirm your reservation.</p>
-            <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
-              <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Reservation Reference:</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">${reservationData.id}</td></tr>
-              <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Date:</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">${reservationData.date}</td></tr>
-              <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Time:</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">${reservationData.time}</td></tr>
-              <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Party Size:</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">${reservationData.guests}</td></tr>
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          </head>
+          <body style="margin: 0; padding: 0; background-color: #17120e; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+            
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #17120e; padding: 40px 15px;">
+              <tr>
+                <td align="center">
+                  
+                  <!-- Main Luxury Card Container -->
+                  <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 580px; background-color: #ffffff; border-radius: 18px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.35); border: 1px solid #36251b;">
+                    
+                    <!-- Luxury Photo Banner (Hosted CDN - No Attachment Issue) -->
+                    <tr>
+                      <td style="padding: 0; line-height: 0; background-color: #2c1a11;">
+                        <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?q=80&w=1200&auto=format&fit=crop" alt="The Coffee Lounge Atmosphere" width="580" style="width: 100%; max-width: 580px; height: 250px; object-fit: cover; display: block; border-top-left-radius: 18px; border-top-right-radius: 18px;" />
+                      </td>
+                    </tr>
+
+                    <!-- Luxury Branding Strip -->
+                    <tr>
+                      <td align="center" style="background-color: #1c110a; padding: 24px 30px 20px 30px; text-align: center; border-bottom: 2px solid #c5a059;">
+                        <p style="color: #c5a059; font-size: 11px; text-transform: uppercase; letter-spacing: 3px; margin: 0 0 6px 0; font-weight: 700;">★ ★ ★ ★ ★ &nbsp; EXCLUSIVE RESERVATION</p>
+                        <h1 style="color: #ffffff; font-size: 26px; margin: 0; font-weight: 700; letter-spacing: 1px; font-family: 'Georgia', serif;">THE COFFEE LOUNGE</h1>
+                        <p style="color: #a89f91; font-size: 12px; letter-spacing: 1.5px; margin: 6px 0 0 0; text-transform: uppercase;">Artisan Espresso Bar & Private Lounge</p>
+                      </td>
+                    </tr>
+
+                    <!-- Greeting Section -->
+                    <tr>
+                      <td style="padding: 35px 35px 15px 35px; text-align: center;">
+                        <div style="display: inline-block; background-color: #f7f2ea; color: #8e6d36; border: 1px solid #e0ceb1; font-size: 11px; font-weight: 700; padding: 6px 18px; border-radius: 25px; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 16px;">
+                          ✓ Reservation Confirmed
+                        </div>
+                        <h2 style="color: #1c110a; font-size: 23px; margin: 0 0 12px 0; font-weight: 700; font-family: 'Georgia', serif;">Table Reservation Confirmed!</h2>
+                        <p style="color: #555555; font-size: 14.5px; line-height: 1.7; margin: 0;">
+                          Dear <strong style="color: #1c110a;">${reservationData.name}</strong>,<br>
+                          We are honored to confirm your upcoming table reservation. Our baristas and culinary team are preparing to host you for a truly memorable coffee lounge experience.
+                        </p>
+                      </td>
+                    </tr>
+
+                    <!-- Luxury Details Card (Gold-accented Ticket) -->
+                    <tr>
+                      <td style="padding: 15px 35px 25px 35px;">
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #faf7f2; border: 1px solid #ebdccb; border-radius: 14px; overflow: hidden;">
+                          
+                          <!-- Ticket Header -->
+                          <tr>
+                            <td colspan="2" style="background-color: #2c1a11; padding: 12px 20px; border-bottom: 2px solid #c5a059;">
+                              <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                                <tr>
+                                  <td style="color: #c5a059; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;">Reservation Reference</td>
+                                  <td align="right" style="color: #ffffff; font-size: 13px; font-family: monospace; font-weight: 700; letter-spacing: 1px;">
+                                    ${reservationData.id}
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+
+                          <!-- Details Rows -->
+                          <tr>
+                            <td style="padding: 14px 20px; color: #7a6e65; font-size: 13.5px; font-weight: 500; border-bottom: 1px dashed #e3ddd3;">📅 Date</td>
+                            <td align="right" style="padding: 14px 20px; color: #1c110a; font-size: 14.5px; font-weight: 700; border-bottom: 1px dashed #e3ddd3;">
+                              ${reservationData.date}
+                            </td>
+                          </tr>
+
+                          <tr>
+                            <td style="padding: 14px 20px; color: #7a6e65; font-size: 13.5px; font-weight: 500; border-bottom: 1px dashed #e3ddd3;">⏰ Time</td>
+                            <td align="right" style="padding: 14px 20px; color: #1c110a; font-size: 14.5px; font-weight: 700; border-bottom: 1px dashed #e3ddd3;">
+                              ${reservationData.time}
+                            </td>
+                          </tr>
+
+                          <tr>
+                            <td style="padding: 14px 20px; color: #7a6e65; font-size: 13.5px; font-weight: 500; border-bottom: 1px dashed #e3ddd3;">👥 Party Size</td>
+                            <td align="right" style="padding: 14px 20px; color: #1c110a; font-size: 14.5px; font-weight: 700; border-bottom: 1px dashed #e3ddd3;">
+                              ${reservationData.guests}
+                            </td>
+                          </tr>
+
+                          <tr>
+                            <td style="padding: 14px 20px; color: #7a6e65; font-size: 13.5px; font-weight: 500;">✨ Atmosphere</td>
+                            <td align="right" style="padding: 14px 20px; color: #8e6d36; font-size: 13.5px; font-weight: 700;">
+                              ${reservationData.eventType || 'Main Lounge & Dining'}
+                            </td>
+                          </tr>
+
+                        </table>
+                      </td>
+                    </tr>
+
+                    <!-- Concierge Hospitality Note -->
+                    <tr>
+                      <td style="padding: 0 35px 28px 35px;">
+                        <div style="background-color: #fff9f0; border: 1px solid #fae6cb; border-left: 4px solid #c5a059; padding: 14px 18px; border-radius: 0 10px 10px 0; color: #704f26; font-size: 12.5px; line-height: 1.6;">
+                          <strong style="color: #523819;">Concierge Note:</strong> Your table is held exclusively for 15 minutes past reservation time. If you have any special seating requests or need to modify your timing, please notify our host desk.
+                        </div>
+                      </td>
+                    </tr>
+
+                    <!-- Luxury Footer -->
+                    <tr>
+                      <td style="background-color: #1c110a; padding: 30px 35px; text-align: center; color: #9c9284; font-size: 12px; line-height: 1.7; border-top: 1px solid #2f1d13;">
+                        <p style="margin: 0 0 6px 0; font-weight: 700; color: #e8ded2; font-size: 13px; letter-spacing: 0.5px;">The Coffee Lounge Hospitality Team</p>
+                        <p style="margin: 0 0 12px 0;">123 Galle Road, Colombo | Concierge: +94 11 234 5678</p>
+                        <p style="margin: 0; font-size: 11px; color: #6b6155;">© 2026 The Coffee Lounge. Dedicated to the craft of exceptional coffee.</p>
+                      </td>
+                    </tr>
+
+                  </table>
+
+                </td>
+              </tr>
             </table>
-            <p>We look forward to hosting you for an exceptional coffee lounge experience!</p>
-            <p>Warm regards,<br><strong>Coffee Lounge Team</strong></p>
-          </div>
+
+          </body>
+          </html>
         `
       };
       try {

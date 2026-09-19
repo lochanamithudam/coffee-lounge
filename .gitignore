@@ -10,3 +10,12 @@ VERCEL_MONGODB_FIX_REPORT*
 BACKEND_ARCHITECTURE*
 eslint-report.html
 data/
+
+COFFEE_LOUNGE_MONGODB_DATABASE_DIAGRAM.pdf
+COFFEE_LOUNGE_MONGODB_DIAGRAM.html
+COFFEE_LOUNGE_SECURITY_AUDIT_REPORT.pdf
+Images/luxury_banner.jpg
+backend-architecture.html
+Dockerfile
+docker-compose.yml
+server.log

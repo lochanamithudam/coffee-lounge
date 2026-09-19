@@ -1907,9 +1907,11 @@ ul {
   .brew-order-row {
     grid-template-columns: 1fr;
   }
+
   .brew-order-form {
     padding: 18px 18px 22px;
   }
+
   .brew-order-header {
     padding: 18px;
   }
@@ -3048,9 +3050,4 @@ footer[role="contentinfo"] {
   height: 100%;
   background: rgba(15, 10, 5, 0.75);
   z-index: 1;
-}
-
-.footer-main {
-  position: relative;
-  z-index: 2;
 }
